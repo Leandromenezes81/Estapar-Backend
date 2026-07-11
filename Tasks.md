@@ -44,8 +44,8 @@ Checklist de implementação. Detalhes de arquitetura e regras em [`docs/PLANO.m
 - [ ] `appsettings.json` — connection string LocalDB + `Simulator:BaseUrl`
 
 ## 6. Testes de domínio (`Estapar.Domain.Tests`)
-- [ ] `FeeCalculatorTests` — ≤30 min grátis; 31 min; arredondamento pra cima; aplicação do fator
-- [ ] `PricingPolicyTests` — limiares 25 / 50 / 75 / 100%
+- [x] `FeeCalculatorTests` — ≤30 min grátis; 31 min; arredondamento pra cima; aplicação do fator
+- [x] `PricingPolicyTests` — limiares 25 / 50 / 75 / 100%
 
 ## 7. Fechamento
 - [ ] `README.md` — como rodar, aplicar migrations, apontar o simulador para a API
