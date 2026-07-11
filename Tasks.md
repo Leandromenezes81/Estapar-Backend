@@ -37,12 +37,13 @@ Checklist de implementação. Detalhes de arquitetura e regras em [`docs/PLANO.m
 - [x] Migration `InitialCreate` (aplicada no LocalDB — `EstaparDb` criado com sucesso)
 
 ## 5. API (`Estapar.Api`)
-- [ ] `Program.cs` — DI (DbContext LocalDB, repositórios, HttpClient, handlers), Swagger
-- [ ] `WebhookController` (`POST /webhook`) — retorna `200`
-- [ ] `RevenueController` (`GET /revenue`)
-- [ ] `GarageBootstrapHostedService` (`IHostedService`) — busca `GET /garage` na inicialização
-- [ ] Middleware de tratamento de exceções
-- [ ] `appsettings.json` — connection string LocalDB + `Simulator:BaseUrl`
+- [x] `Program.cs` — DI (DbContext LocalDB, repositórios, HttpClient, use cases), Swagger
+- [x] `WebhookController` (`POST /webhook`) — retorna `200`
+- [x] `RevenueController` (`GET /revenue`) — aceita JSON body e fallback via query string
+- [x] `GarageBootstrapHostedService` (`IHostedService`) — busca `GET /garage` na inicialização
+- [x] `ExceptionHandlingMiddleware` — mapeia `GarageFullException`→409, `SessionNotFoundException`→404, `ArgumentException`/`InvalidOperationException`→400
+- [x] `appsettings.json` — connection string LocalDB + `Simulator:BaseUrl`
+- [x] Testado ponta a ponta com simulador mock local: bootstrap, ENTRY→PARKED→EXIT, `GET /revenue` (R$18,00 para 65min/setor vazio), bloqueio de lotação (409) e sessão inexistente (404)
 
 ## 6. Testes de domínio (`Estapar.Domain.Tests`)
 - [x] `FeeCalculatorTests` — ≤30 min grátis; 31 min; arredondamento pra cima; aplicação do fator
