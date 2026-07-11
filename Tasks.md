@@ -31,10 +31,10 @@ Checklist de implementação. Detalhes de arquitetura e regras em [`docs/PLANO.m
 - [x] `LoadGarageConfigurationUseCase` — busca do simulador e persiste (idempotente)
 
 ## 4. Infrastructure (`Estapar.Infrastructure`)
-- [ ] `AppDbContext` + configs Fluent API (`Sectors`, `Spots`, `ParkingSessions`)
-- [ ] Repositórios concretos + `UnitOfWork`
-- [ ] `GarageConfigHttpClient : IGarageConfigClient` via `HttpClientFactory`
-- [ ] Migration `InitialCreate` (LocalDB)
+- [x] `AppDbContext` + configs Fluent API (`Sectors`, `Spots`, `ParkingSessions`)
+- [x] Repositórios concretos (`SectorRepository`, `SpotRepository`, `ParkingSessionRepository`) + `UnitOfWork`
+- [x] `GarageConfigHttpClient : IGarageConfigClient` via `HttpClientFactory`
+- [x] Migration `InitialCreate` (aplicada no LocalDB — `EstaparDb` criado com sucesso)
 
 ## 5. API (`Estapar.Api`)
 - [ ] `Program.cs` — DI (DbContext LocalDB, repositórios, HttpClient, handlers), Swagger
