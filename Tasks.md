@@ -12,13 +12,13 @@ Checklist de implementação. Detalhes de arquitetura e regras em [`docs/PLANO.m
   - `xunit`, `xunit.runner.visualstudio`, `FluentAssertions` (testes)
 
 ## 2. Domínio (`Estapar.Domain`)
-- [ ] VOs `LicensePlate`, `Money` (Amount + Currency `BRL`)
-- [ ] Entidade `Sector` (Name, BasePrice, MaxCapacity) com `IsFull` e `PriceFactorFor(occupancyRatio)`
-- [ ] Entidade `Spot` (Id, SectorName, Lat, Lng, Status)
-- [ ] Agregado `ParkingSession` (LicensePlate, SectorName, EntryTime, ExitTime?, LockedPriceFactor, SpotId?, AmountCharged?)
-- [ ] `PricingPolicy.CalculateFactor(occupancyRatio)` — tabela `<25 → 0.90`, `≤50 → 1.00`, `≤75 → 1.10`, `≤100 → 1.25`
-- [ ] `FeeCalculator.Calculate(entry, exit, basePrice, factor)` — 30 min grátis + `Ceiling` horas × basePrice × fator
-- [ ] Exceções de domínio: `GarageFullException`, `SessionNotFoundException`
+- [x] VOs `LicensePlate`, `Money` (Amount + Currency `BRL`)
+- [x] Entidade `Sector` (Name, BasePrice, MaxCapacity) com `IsFull` e `PriceFactorFor(occupancyRatio)`
+- [x] Entidade `Spot` (Id, SectorName, Lat, Lng, Status)
+- [x] Agregado `ParkingSession` (LicensePlate, SectorName, EntryTime, ExitTime?, LockedPriceFactor, SpotId?, AmountCharged?)
+- [x] `PricingPolicy.CalculateFactor(occupancyRatio)` — tabela `<25 → 0.90`, `≤50 → 1.00`, `≤75 → 1.10`, `≤100 → 1.25`
+- [x] `FeeCalculator.Calculate(entry, exit, basePrice, factor)` — 30 min grátis + `Ceiling` horas × basePrice × fator
+- [x] Exceções de domínio: `GarageFullException`, `SessionNotFoundException`
 
 ## 3. Application (`Estapar.Application`)
 - [ ] Ports: `IGarageConfigClient`, `ISectorRepository`, `ISpotRepository`, `IParkingSessionRepository`, `IUnitOfWork`
