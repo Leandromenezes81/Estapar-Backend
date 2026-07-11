@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{282099FB-28AD-4D43-AA95-25E41CF31C4C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estapar.Domain", "src\Estapar.Domain\Estapar.Domain.csproj", "{5615B13B-1772-4C69-93F9-D86C2B92F5CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estapar.Application", "src\Estapar.Application\Estapar.Application.csproj", "{F8B0D468-6BCD-4117-BCF9-EFEF57449F97}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estapar.Infrastructure", "src\Estapar.Infrastructure\Estapar.Infrastructure.csproj", "{565A7114-AF87-4AC2-B648-80FFEFB05407}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estapar.Api", "src\Estapar.Api\Estapar.Api.csproj", "{E71EE9CB-1F58-4311-B2D3-15577A7F8D46}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{6B9D9126-4A8F-4EE3-A332-727AC8D8C8E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estapar.Domain.Tests", "tests\Estapar.Domain.Tests\Estapar.Domain.Tests.csproj", "{1C3C2077-54BB-4EB6-ABE4-67D5044E7900}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5615B13B-1772-4C69-93F9-D86C2B92F5CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5615B13B-1772-4C69-93F9-D86C2B92F5CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5615B13B-1772-4C69-93F9-D86C2B92F5CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5615B13B-1772-4C69-93F9-D86C2B92F5CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8B0D468-6BCD-4117-BCF9-EFEF57449F97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8B0D468-6BCD-4117-BCF9-EFEF57449F97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8B0D468-6BCD-4117-BCF9-EFEF57449F97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8B0D468-6BCD-4117-BCF9-EFEF57449F97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{565A7114-AF87-4AC2-B648-80FFEFB05407}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{565A7114-AF87-4AC2-B648-80FFEFB05407}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{565A7114-AF87-4AC2-B648-80FFEFB05407}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{565A7114-AF87-4AC2-B648-80FFEFB05407}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E71EE9CB-1F58-4311-B2D3-15577A7F8D46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E71EE9CB-1F58-4311-B2D3-15577A7F8D46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E71EE9CB-1F58-4311-B2D3-15577A7F8D46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E71EE9CB-1F58-4311-B2D3-15577A7F8D46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C3C2077-54BB-4EB6-ABE4-67D5044E7900}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C3C2077-54BB-4EB6-ABE4-67D5044E7900}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C3C2077-54BB-4EB6-ABE4-67D5044E7900}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C3C2077-54BB-4EB6-ABE4-67D5044E7900}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5615B13B-1772-4C69-93F9-D86C2B92F5CE} = {282099FB-28AD-4D43-AA95-25E41CF31C4C}
+		{F8B0D468-6BCD-4117-BCF9-EFEF57449F97} = {282099FB-28AD-4D43-AA95-25E41CF31C4C}
+		{565A7114-AF87-4AC2-B648-80FFEFB05407} = {282099FB-28AD-4D43-AA95-25E41CF31C4C}
+		{E71EE9CB-1F58-4311-B2D3-15577A7F8D46} = {282099FB-28AD-4D43-AA95-25E41CF31C4C}
+		{1C3C2077-54BB-4EB6-ABE4-67D5044E7900} = {6B9D9126-4A8F-4EE3-A332-727AC8D8C8E5}
+	EndGlobalSection
+EndGlobal
