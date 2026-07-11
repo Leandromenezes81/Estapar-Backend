@@ -50,6 +50,6 @@ Checklist de implementação. Detalhes de arquitetura e regras em [`docs/PLANO.m
 - [x] `PricingPolicyTests` — limiares 25 / 50 / 75 / 100%
 
 ## 7. Fechamento
-- [ ] `README.md` — como rodar, aplicar migrations, apontar o simulador para a API
-- [ ] `dotnet build` sem erros
-- [ ] `dotnet test` verde
+- [x] `README.md` — como rodar, aplicar migrations, apontar o simulador para a API
+- [x] `dotnet build` sem erros
+- [x] `dotnet test` verde
