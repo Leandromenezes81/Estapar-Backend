@@ -10,6 +10,7 @@ Stack: **.NET 8 + ASP.NET Core WebAPI**, **Arquitetura Limpa + DDD**, **EF Core 
 - **Testes:** apenas camada de **Domínio** (unitários de tarifa, preço dinâmico, ocupação).
 - **Infra:** **SQL Server LocalDB** (instância local); o simulador roda à parte, manualmente.
 - **Preço dinâmico:** o fator de ocupação é **calculado e travado na ENTRADA** e reaplicado na saída.
+- **Campo `sector` no ENTRY:** o exemplo do `.docx` para o payload `ENTRY` não inclui `sector` (só `license_plate`, `entry_time`, `event_type`). Para manter o fator de preço travado na entrada (decisão acima), assumimos que o simulador envia também um campo `"sector"` no payload de `ENTRY`, mesmo fora do exemplo documentado. Se o simulador real não enviar esse campo, `HandleWebhookEventUseCase` lança `ArgumentException` e o setor precisará ser resolvido no `PARKED` em vez disso (ver `docs/PLANO.md` — mudança de design a avaliar nesse cenário).
 
 ---
 

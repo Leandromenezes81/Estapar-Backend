@@ -21,13 +21,14 @@ Checklist de implementação. Detalhes de arquitetura e regras em [`docs/PLANO.m
 - [x] Exceções de domínio: `GarageFullException`, `SessionNotFoundException`
 
 ## 3. Application (`Estapar.Application`)
-- [ ] Ports: `IGarageConfigClient`, `ISectorRepository`, `ISpotRepository`, `IParkingSessionRepository`, `IUnitOfWork`
-- [ ] DTOs: `WebhookEventDto` (polimórfico por `event_type`), `RevenueRequest`, `RevenueResponse`
-- [ ] Handler `HandleEntryCommand` — valida lotação, cria sessão, trava fator de preço
-- [ ] Handler `HandleParkedCommand` — vincula vaga por lat/lng à sessão aberta
-- [ ] Handler `HandleExitCommand` — fecha sessão, calcula `Money`, libera vaga
-- [ ] Handler `GetRevenueQuery` — soma `AmountCharged` por setor + data
-- [ ] Handler `LoadGarageConfiguration` — busca do simulador e persiste (idempotente)
+- [x] Ports: `IGarageConfigClient`, `ISectorRepository`, `ISpotRepository`, `IParkingSessionRepository`, `IUnitOfWork`
+- [x] DTOs: `WebhookEventDto` (polimórfico por `event_type`), `GarageConfigDto`, `RevenueRequest`, `RevenueResponse`
+- [x] `HandleEntryUseCase` — valida lotação do setor, trava fator de preço, cria sessão
+- [x] `HandleParkedUseCase` — resolve vaga por lat/lng e vincula à sessão aberta
+- [x] `HandleExitUseCase` — fecha sessão, calcula `Money`, libera vaga
+- [x] `HandleWebhookEventUseCase` — dispatcher que lê `event_type` e roteia para o use case correto
+- [x] `GetRevenueUseCase` — soma `AmountCharged` por setor + data
+- [x] `LoadGarageConfigurationUseCase` — busca do simulador e persiste (idempotente)
 
 ## 4. Infrastructure (`Estapar.Infrastructure`)
 - [ ] `AppDbContext` + configs Fluent API (`Sectors`, `Spots`, `ParkingSessions`)
