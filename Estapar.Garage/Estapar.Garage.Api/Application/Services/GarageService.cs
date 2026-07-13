@@ -1,4 +1,4 @@
-using Estapar.Garage.Api.Application.DTOs;
+using Estapar.Garage.Api.Application.DTO;
 using Estapar.Garage.Api.Application.Interfaces;
 using GarageEntity = Estapar.Garage.Api.Domain.Entities.Garage;
 

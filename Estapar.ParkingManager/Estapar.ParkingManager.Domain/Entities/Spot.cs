@@ -1,3 +1,5 @@
+using Estapar.ParkingManager.Domain.Enums;
+
 namespace Estapar.ParkingManager.Domain.Entities;
 
 /// <summary>A single physical parking spot belonging to a sector.</summary>

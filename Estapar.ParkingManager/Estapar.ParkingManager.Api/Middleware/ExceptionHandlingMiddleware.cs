@@ -43,6 +43,8 @@ public sealed class ExceptionHandlingMiddleware
         SessionNotFoundException e => (StatusCodes.Status404NotFound, e.Message),
         ArgumentException e => (StatusCodes.Status400BadRequest, e.Message),
         InvalidOperationException e => (StatusCodes.Status400BadRequest, e.Message),
+        NotFoundException e => (StatusCodes.Status404NotFound, e.Message),
+        InternalServerErrorException e => (StatusCodes.Status500InternalServerError, e.Message),
         _ => (StatusCodes.Status500InternalServerError, "Ocorreu um erro inesperado.")
     };
 }

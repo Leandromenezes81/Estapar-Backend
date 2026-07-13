@@ -1,4 +1,4 @@
-namespace Estapar.ParkingManager.Domain.Entities;
+namespace Estapar.ParkingManager.Domain.Enums;
 
 public enum SpotStatus
 {

@@ -2,7 +2,7 @@ using Estapar.ParkingManager.Application.DTO;
 using Estapar.ParkingManager.Application.UseCases.Entry;
 using Estapar.ParkingManager.Application.UseCases.Exit;
 using Estapar.ParkingManager.Application.UseCases.Parked;
-using Estapar.ParkingManager.Domain.Entities;
+using Estapar.ParkingManager.Domain.Enums;
 
 namespace Estapar.ParkingManager.Application.UseCases.Webhook;
 

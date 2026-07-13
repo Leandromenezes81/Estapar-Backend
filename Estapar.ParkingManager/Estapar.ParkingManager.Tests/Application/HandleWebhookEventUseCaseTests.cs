@@ -4,6 +4,7 @@ using Estapar.ParkingManager.Application.UseCases.Exit;
 using Estapar.ParkingManager.Application.UseCases.Parked;
 using Estapar.ParkingManager.Application.UseCases.Webhook;
 using Estapar.ParkingManager.Domain.Entities;
+using Estapar.ParkingManager.Domain.Enums;
 using Estapar.ParkingManager.Tests.Application.Fakes;
 using FluentAssertions;
 

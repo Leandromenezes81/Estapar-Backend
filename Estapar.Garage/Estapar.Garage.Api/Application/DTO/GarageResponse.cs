@@ -1,4 +1,4 @@
-namespace Estapar.Garage.Api.Application.DTOs;
+namespace Estapar.Garage.Api.Application.DTO;
 
 public sealed record GarageResponse(int Id, string Name, DateTime CreatedAt, List<SectorResponse> Sectors);
 

@@ -1,4 +1,4 @@
-using Estapar.Garage.Api.Application.DTOs;
+using Estapar.Garage.Api.Application.DTO;
 using Estapar.Garage.Api.Application.Services;
 
 namespace Estapar.Garage.Api.Endpoints;

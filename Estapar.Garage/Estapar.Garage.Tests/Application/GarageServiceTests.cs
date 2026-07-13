@@ -1,4 +1,4 @@
-using Estapar.Garage.Api.Application.DTOs;
+using Estapar.Garage.Api.Application.DTO;
 using Estapar.Garage.Api.Application.Services;
 using Estapar.Garage.Tests.Application.Fakes;
 using FluentAssertions;

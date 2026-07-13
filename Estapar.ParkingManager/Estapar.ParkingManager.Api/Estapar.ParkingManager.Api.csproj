@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Estapar.ParkingManager.Application\Estapar.ParkingManager.Application.csproj" />
+    <ProjectReference Include="..\Estapar.ParkingManager.Infrastructure.BackgroundServices\Estapar.ParkingManager.Infrastructure.BackgroundServices.csproj" />
     <ProjectReference Include="..\Estapar.ParkingManager.Infrastructure.Data\Estapar.ParkingManager.Infrastructure.Data.csproj" />
   </ItemGroup>
 

@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using Estapar.ParkingManager.Domain.Entities;
+using Estapar.ParkingManager.Domain.Enums;
 
 namespace Estapar.ParkingManager.Application.DTO;
 
