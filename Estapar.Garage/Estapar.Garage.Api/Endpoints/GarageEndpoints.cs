@@ -16,6 +16,7 @@ public static class GarageEndpoints
             .WithTags("Garage")
             .WithSummary("Todas as garagens (mesmo formato agregado de GET /garages/{id}) — contrato consumido pelo Estapar.ParkingManager. Protegido por API Key (header X-Api-Key), não por JWT.")
             .AddEndpointFilter<ApiKeyEndpointFilter>()
+            .WithMetadata(new ApiKeyAuthAttribute())
             .AllowAnonymous()
             .Produces<List<GarageResponse>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized);

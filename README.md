@@ -28,23 +28,114 @@ A solution reúne duas Web APIs .NET independentes, lado a lado:
 
 ## Configuração
 
-A credencial da connection string **não fica no `appsettings.json`** (o valor commitado ali é só um
-placeholder, `Password=CHANGE_ME`) — cada projeto lê a connection string real via
-[.NET User Secrets](https://learn.microsoft.com/aspnet/core/security/app-secrets), configurado assim:
+Nenhum valor sensível (senha de banco, chaves de assinatura, segredos de autenticação) fica no
+`appsettings.json` — os valores commitados ali são só placeholders (`CHANGE_ME`). Os valores reais
+ficam em [.NET User Secrets](https://learn.microsoft.com/aspnet/core/security/app-secrets), um
+arquivo `secrets.json` fora do repositório (`%APPDATA%\Microsoft\UserSecrets\<id>\secrets.json` no
+Windows), associado ao projeto via um `<UserSecretsId>` no `.csproj`. O
+`WebApplication.CreateBuilder` carrega esse arquivo automaticamente em ambiente `Development`,
+sobrepondo o placeholder do `appsettings.json` — você não precisa editar nenhum arquivo `.json`
+manualmente.
+
+Existem **4 secrets** para configurar, 2 deles duplicados (um valor independente por API) e 1
+compartilhado entre as duas APIs. Rode os comandos abaixo em um terminal (PowerShell ou o Git Bash),
+na raiz do repositório.
+
+### Passo 0 — habilitar o User Secrets em cada projeto (uma vez só)
 
 ```
 dotnet user-secrets init --project Estapar.Garage/Estapar.Garage.Api
+dotnet user-secrets init --project Estapar.ParkingManager/Estapar.ParkingManager.Api
+```
+
+### Secret 1 — `ConnectionStrings:DefaultConnection` (senha do SQL Server)
+
+Cada API tem seu próprio banco (`EstaparGarageDb` e `EstaparParkingManagerDb`) na mesma instância de
+SQL Server. Troque `<sua-senha>` pela senha real do seu SQL Server (usuário `sa`, ou outro usuário de
+sua instância):
+
+```
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=127.0.0.1,1433;Database=EstaparGarageDb;Uid=sa;Password=<sua-senha>;MultipleActiveResultSets=true;TrustServerCertificate=True" --project Estapar.Garage/Estapar.Garage.Api
 
-dotnet user-secrets init --project Estapar.ParkingManager/Estapar.ParkingManager.Api
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=127.0.0.1,1433;Database=EstaparParkingManagerDb;Uid=sa;Password=<sua-senha>;MultipleActiveResultSets=true;TrustServerCertificate=True" --project Estapar.ParkingManager/Estapar.ParkingManager.Api
 ```
 
-Os secrets ficam fora do repositório (`%APPDATA%\Microsoft\UserSecrets\<id>\secrets.json` no Windows),
-e o `dotnet user-secrets init` já grava o `<UserSecretsId>` correspondente no `.csproj` de cada API —
-o `WebApplication.CreateBuilder` os carrega automaticamente em ambiente `Development`, sobrepondo o
-placeholder do `appsettings.json`. Em outros ambientes, defina a connection string via variável de
-ambiente (`ConnectionStrings__DefaultConnection`) ou outro provedor de configuração.
+### Secret 2 — `Jwt:Key` (chave de assinatura do token JWT)
+
+Uma chave aleatória por API — não precisa (nem deve) ser a mesma nas duas. Gere um valor aleatório e
+já use o resultado no comando de `set`, sem editar nada manualmente:
+
+**PowerShell:**
+```powershell
+$bytes = New-Object byte[] 48; [System.Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes)
+dotnet user-secrets set "Jwt:Key" "$([Convert]::ToBase64String($bytes))" --project Estapar.Garage/Estapar.Garage.Api
+```
+```powershell
+$bytes = New-Object byte[] 48; [System.Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes)
+dotnet user-secrets set "Jwt:Key" "$([Convert]::ToBase64String($bytes))" --project Estapar.ParkingManager/Estapar.ParkingManager.Api
+```
+
+**Git Bash / Linux / macOS:**
+```bash
+dotnet user-secrets set "Jwt:Key" "$(openssl rand -base64 48)" --project Estapar.Garage/Estapar.Garage.Api
+dotnet user-secrets set "Jwt:Key" "$(openssl rand -base64 48)" --project Estapar.ParkingManager/Estapar.ParkingManager.Api
+```
+
+### Secret 3 — `Auth:ClientSecret` (senha do `POST /auth/token`)
+
+Também uma chave aleatória independente por API — é a "senha" usada para obter o token JWT (ver
+seção [Autenticação](#autenticação) abaixo).
+
+**PowerShell:**
+```powershell
+$bytes = New-Object byte[] 24; [System.Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes)
+dotnet user-secrets set "Auth:ClientSecret" "$([Convert]::ToBase64String($bytes))" --project Estapar.Garage/Estapar.Garage.Api
+```
+```powershell
+$bytes = New-Object byte[] 24; [System.Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes)
+dotnet user-secrets set "Auth:ClientSecret" "$([Convert]::ToBase64String($bytes))" --project Estapar.ParkingManager/Estapar.ParkingManager.Api
+```
+
+**Git Bash / Linux / macOS:**
+```bash
+dotnet user-secrets set "Auth:ClientSecret" "$(openssl rand -base64 24)" --project Estapar.Garage/Estapar.Garage.Api
+dotnet user-secrets set "Auth:ClientSecret" "$(openssl rand -base64 24)" --project Estapar.ParkingManager/Estapar.ParkingManager.Api
+```
+
+### Secret 4 — `ApiKey` (protege `GET /garage`)
+
+**Atenção: este é o único secret que precisa ser o *mesmo valor* nas duas APIs** — é a chave que o
+`Estapar.ParkingManager.Api` envia no header `X-Api-Key` ao chamar `GET /garage` no
+`Estapar.Garage.Api`. Gere o valor **uma vez** e reaproveite nos dois comandos:
+
+**PowerShell:**
+```powershell
+$bytes = New-Object byte[] 32; [System.Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes)
+$apiKey = [Convert]::ToBase64String($bytes)
+dotnet user-secrets set "ApiKey" "$apiKey" --project Estapar.Garage/Estapar.Garage.Api
+dotnet user-secrets set "GarageApi:ApiKey" "$apiKey" --project Estapar.ParkingManager/Estapar.ParkingManager.Api
+```
+
+**Git Bash / Linux / macOS:**
+```bash
+API_KEY=$(openssl rand -base64 32)
+dotnet user-secrets set "ApiKey" "$API_KEY" --project Estapar.Garage/Estapar.Garage.Api
+dotnet user-secrets set "GarageApi:ApiKey" "$API_KEY" --project Estapar.ParkingManager/Estapar.ParkingManager.Api
+```
+
+### Conferindo o que foi configurado
+
+```
+dotnet user-secrets list --project Estapar.Garage/Estapar.Garage.Api
+dotnet user-secrets list --project Estapar.ParkingManager/Estapar.ParkingManager.Api
+```
+
+Cada projeto deve listar 3 chaves: `ConnectionStrings:DefaultConnection`, `Jwt:Key` e
+`Auth:ClientSecret`, mais `ApiKey` (Garage.Api) ou `GarageApi:ApiKey` (ParkingManager.Api).
+
+> **Nunca cole esses valores em commits, issues, PRs, chats ou qualquer lugar público** — quem tiver
+> acesso a eles pode gerar tokens válidos, ler a garagem sem autorização ou acessar o banco de dados.
+> Se algum desses valores vazar, gere um novo (rodando o comando de novo) e reinicie as APIs.
 
 ### Estapar.Garage.Api
 
@@ -92,19 +183,9 @@ Cada API tem seu **próprio** esquema de autenticação — não compartilham se
 - `POST /webhook` (ParkingManager.Api) continua **anônimo** — é chamado por um simulador externo,
   fora do nosso controle.
 
-Configuração necessária (todos os valores sensíveis via user secrets, nunca no `appsettings.json`):
-
-```
-# Estapar.Garage.Api
-dotnet user-secrets set "Jwt:Key" "<segredo-hmac>" --project Estapar.Garage/Estapar.Garage.Api
-dotnet user-secrets set "Auth:ClientSecret" "<segredo>" --project Estapar.Garage/Estapar.Garage.Api
-dotnet user-secrets set "ApiKey" "<chave-compartilhada>" --project Estapar.Garage/Estapar.Garage.Api
-
-# Estapar.ParkingManager.Api
-dotnet user-secrets set "Jwt:Key" "<segredo-hmac>" --project Estapar.ParkingManager/Estapar.ParkingManager.Api
-dotnet user-secrets set "Auth:ClientSecret" "<segredo>" --project Estapar.ParkingManager/Estapar.ParkingManager.Api
-dotnet user-secrets set "GarageApi:ApiKey" "<mesma-chave-compartilhada-do-Garage.Api>" --project Estapar.ParkingManager/Estapar.ParkingManager.Api
-```
+Os 3 secrets envolvidos (`Jwt:Key`, `Auth:ClientSecret` e `ApiKey`/`GarageApi:ApiKey`) são configurados
+via user secrets — veja o passo a passo com os comandos de geração em
+[Configuração](#configuração), acima.
 
 `Auth:ClientId` (`"garage-admin"` no Garage.Api, `"parking-manager-admin"` no ParkingManager.Api)
 já vem no `appsettings.json` — só o `ClientSecret` é sensível. Exemplo de uso:

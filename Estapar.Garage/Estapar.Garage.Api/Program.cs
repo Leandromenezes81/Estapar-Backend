@@ -22,6 +22,44 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1",
         Description = "Cadastro de garagens, setores e vagas; fonte do contrato GET /garage consumido pelo Estapar.ParkingManager."
     });
+
+    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Description = "Informe apenas o token JWT (sem o prefixo 'Bearer '), obtido em POST /auth/token."
+    });
+
+    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+
+    // GET /garage não usa Bearer — é protegido por ApiKeyEndpointFilter (header X-Api-Key).
+    // Este esquema é aplicado só naquele endpoint (ver GarageEndpoints), sobrescrevendo o
+    // requirement global de Bearer acima.
+    options.AddSecurityDefinition("ApiKey", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Name = "X-Api-Key",
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Description = "Chave de API compartilhada com o Estapar.ParkingManager.Api, exigida só em GET /garage."
+    });
+
+    options.OperationFilter<Estapar.Garage.Api.Filters.ApiKeySecurityOperationFilter>();
 });
 
 // Persistence
