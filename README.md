@@ -2,8 +2,7 @@
 
 Backend de gerenciamento de estacionamento (vagas, entrada/saída de veículos e receita), implementado
 como teste técnico da Estapar. Detalhes de regras de negócio e decisões de arquitetura em
-[`docs/PLANO.md`](docs/PLANO.md); progresso da implementação em [`Tasks.md`](Tasks.md) (Fase 1) e
-[`Estapar.Garage/TASKS.md`](Estapar.Garage/TASKS.md) (Fase 2).
+[`docs/PLANO.md`](docs/PLANO.md).
 
 ## Aplicações
 
@@ -62,6 +61,9 @@ Banco próprio (`EstaparGarageDb`), independente do `EstaparParkingManagerDb` us
 `GarageApi:BaseUrl` deve apontar para onde o `Estapar.Garage.Api` está rodando (ou via variável de
 ambiente `GarageApi__BaseUrl`).
 
+> As connection strings dos arquivos `appsettings.json` deste repositório são de ambiente local/teste.
+> Não reutilize essas credenciais em ambientes reais.
+
 ## Como rodar
 
 1. **Restaurar dependências**
@@ -93,6 +95,20 @@ ambiente `GarageApi__BaseUrl`).
 
    Swagger: `http://localhost:5003/swagger`.
 
+## Modelo de domínio (Estapar.ParkingManager)
+
+- **Sector**: setor de uma garagem (ex. "A"). O `Id` é o mesmo Id retornado pelo `GET /garage` do
+  Estapar.Garage.Api — não é gerado internamente. Isso importa porque o **mesmo nome de setor se
+  repete entre garagens diferentes** (cada garagem tem seu próprio "A", "B", "C", "D", com Ids
+  distintos); toda regra de negócio (ocupação, fator de preço dinâmico, vaga, receita) é resolvida
+  pelo `Id` do setor, nunca pelo nome, para não misturar dados de garagens diferentes.
+- **Spot**: vaga física, pertence a um `SectorId`. Status: enum `SpotStatus` (`AVAILABLE = 0`,
+  `OCCUPIED = 1`, `DEACTIVATED = 2`).
+- **ParkingSession**: ciclo ENTRY → PARKED → EXIT de um veículo, identificado por `SectorId`. O fator
+  de preço dinâmico é calculado e travado no momento da ENTRY, com base na ocupação daquele setor
+  específico naquele instante.
+- **EventType**: enum do tipo de evento do webhook (`ENTRY = 0`, `PARKED = 1`, `EXIT = 2`).
+
 ## Endpoints
 
 ### Estapar.Garage.Api (`http://localhost:5010`)
@@ -109,8 +125,64 @@ ambiente `GarageApi__BaseUrl`).
 
 | Método | Rota | Descrição |
 |---|---|---|
-| `POST` | `/webhook` | Recebe eventos `ENTRY`, `PARKED`, `EXIT` do simulador. Retorna `200`. |
-| `GET` | `/revenue` | Receita total por setor (Id) e data. Aceita `{ "date": "2025-01-01", "sector": 1 }` no corpo ou `?date=2025-01-01&sector=1` na query string. `sector` é o Id do setor, não o nome — o mesmo nome (ex. "A") pode repetir entre garagens diferentes, então a consulta precisa ser por uma instância específica. |
+| `POST` | `/webhook` | Recebe eventos `ENTRY`, `PARKED`, `EXIT` do simulador. |
+| `GET` | `/revenue` | Receita total por setor (Id) e data. |
+
+Todas as respostas (sucesso e erro) dos dois endpoints acima são envelopadas em um objeto `Response`:
+
+```json
+{
+  "errorMessages": [],
+  "hasErrors": false,
+  "message": "Evento 'ENTRY' processado com sucesso.",
+  "statusCode": 200,
+  "collection": null,
+  "count": 0
+}
+```
+
+Em caso de erro, `hasErrors` é `true` e `errorMessages` traz uma ou mais mensagens (validação de
+payload, regra de negócio violada, etc.), sempre em português.
+
+#### `POST /webhook`
+
+Payload único, discriminado por `event_type` (campos não usados no tipo do evento ficam nulos):
+
+```json
+{
+  "event_type": "ENTRY",
+  "license_plate": "ABC1234",
+  "entry_time": "2026-07-13T10:00:00Z",
+  "sector": 1,
+  "lat": null,
+  "lng": null,
+  "exit_time": null
+}
+```
+
+- `event_type`: `"ENTRY"`, `"PARKED"` ou `"EXIT"` (aceita também o valor numérico do enum `EventType`).
+- `sector`: **Id do setor** (não o nome) — obrigatório em `ENTRY` e `PARKED`, para travar o fator de
+  preço e resolver a vaga na garagem correta.
+- `lat`/`lng`: obrigatórios em `PARKED`, coordenadas da vaga.
+- `entry_time`/`exit_time`: obrigatórios em `ENTRY`/`EXIT`, respectivamente.
+
+#### `GET /revenue`
+
+Recebe `sector` (Id do setor, não o nome) e `date`. O test spec mostra `GET` com corpo JSON; a API
+aceita tanto o corpo quanto query string, para compatibilidade com clientes que não enviam corpo em
+requisições `GET`:
+
+```
+GET /revenue?date=2026-07-13&sector=1
+```
+
+ou
+
+```json
+{ "date": "2026-07-13", "sector": 1 }
+```
+
+O `collection` da resposta traz `{ "amount": ..., "currency": "BRL", "timestamp": ... }`.
 
 ## Testes
 
@@ -122,9 +194,11 @@ Cobre `PricingPolicy` (limiares de ocupação 25/50/75/100%) e `FeeCalculator` (
 
 ## Suposições assumidas fora da spec
 
-- O payload de `ENTRY` do `.docx` não inclui `sector`, mas o fator de preço dinâmico precisa ser travado no momento da entrada (por setor). Assumimos que o simulador envia um campo adicional `"sector"` no evento `ENTRY`. Caso o simulador real não envie esse campo, o `HandleWebhookEventUseCase` rejeita o evento com `400 Bad Request` — nesse cenário, a resolução do setor precisaria migrar para o evento `PARKED` (ver nota em `docs/PLANO.md`).
+- O payload de `ENTRY` do `.docx` não inclui `sector`, mas o fator de preço dinâmico precisa ser travado no momento da entrada (por setor). Assumimos que o simulador envia um campo adicional `"sector"` nos eventos `ENTRY` e `PARKED`, contendo o **Id do setor** (não o nome), já que o mesmo nome de setor se repete entre garagens diferentes. Caso o simulador real não envie esse campo, o `HandleWebhookEventUseCase` rejeita o evento com `400 Bad Request`.
+- Pelo mesmo motivo, `GET /revenue` recebe `sector` como Id, não como nome — consultar por nome seria ambíguo entre garagens diferentes que compartilham o mesmo nome de setor.
 - `GET /revenue` com corpo em uma requisição GET é atípico; a API aceita tanto o body quanto query string para maior compatibilidade com clientes/ferramentas que não enviam corpo em GET.
 - `PUT /garages/{id}` substitui integralmente o conjunto de setores/vagas da garagem (soft-delete dos antigos + criação dos novos), em vez de reconciliar item a item por Id — mais simples e seguro para um CRUD escopado no agregado Garage.
+- Todas as mensagens de sucesso e erro retornadas pela API (e as exceções internas que as originam) estão em português. Mensagens geradas diretamente pelo parser JSON do .NET (`System.Text.Json`) em caso de payload semanticamente inválido — ex. um valor incompatível com o tipo de um campo — permanecem em inglês, por serem produzidas pelo runtime antes de qualquer código da aplicação.
 
 ## Estrutura do projeto
 

@@ -6,6 +6,10 @@
 # dotenv files
 .env
 
+# Local scratch task lists (not part of the project's tracked docs)
+Tasks.md
+TASKS.md
+
 # User-specific files
 *.rsuser
 *.suo
