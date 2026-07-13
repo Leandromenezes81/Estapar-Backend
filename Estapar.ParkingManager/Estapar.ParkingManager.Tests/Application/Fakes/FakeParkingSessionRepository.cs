@@ -4,7 +4,7 @@ using Estapar.ParkingManager.Domain.ValueObjects;
 
 namespace Estapar.ParkingManager.Tests.Application.Fakes;
 
-/// <summary>In-memory IParkingSessionRepository used by Application-layer tests instead of a mocking library.</summary>
+/// <summary>Implementação em memória de IParkingSessionRepository, usada pelos testes da camada Application em vez de uma biblioteca de mocking.</summary>
 public sealed class FakeParkingSessionRepository : IParkingSessionRepository
 {
     private readonly List<ParkingSession> _sessions;

@@ -4,9 +4,9 @@ using Estapar.ParkingManager.Domain.Entities;
 namespace Estapar.ParkingManager.Application.UseCases.GarageBootstrap;
 
 /// <summary>
-/// Fetches the garage/spot configuration from the simulator's GET /garage
-/// endpoint and persists it. Idempotent: existing sectors/spots (matched
-/// by their natural key) are left untouched.
+/// Busca a configuração de garagens/vagas no endpoint GET /garage do
+/// simulador e a persiste. Idempotente: setores/vagas já existentes
+/// (identificados pela chave natural) são deixados intactos.
 /// </summary>
 public sealed class LoadGarageConfigurationUseCase
 {
@@ -27,14 +27,15 @@ public sealed class LoadGarageConfigurationUseCase
         _unitOfWork = unitOfWork;
     }
 
+    /// <summary>Carrega a configuração de todas as garagens e persiste os setores e vagas ainda não cadastrados.</summary>
     public async Task HandleAsync(CancellationToken cancellationToken = default)
     {
         var garages = await _garageConfigClient.GetGarageConfigurationAsync(cancellationToken);
 
-        // Sectors are identified by the Id assigned by the Garage API, which is unique
-        // per garage even when the sector's name (e.g. "A") repeats across garages —
-        // track Ids already handled in this run so we don't try to add the same
-        // not-yet-saved sector twice.
+        // Setores são identificados pelo Id atribuído pela Garage API, que é único
+        // por garagem mesmo quando o nome do setor (ex.: "A") se repete entre
+        // garagens diferentes — rastreia os Ids já tratados nesta execução para não
+        // tentar adicionar o mesmo setor ainda não salvo duas vezes.
         var handledSectorIds = new HashSet<int>();
 
         foreach (var garageDto in garages)

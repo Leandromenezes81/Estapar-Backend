@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Estapar.ParkingManager.Infrastructure.Data.Persistence.Configurations;
 
+/// <summary>Mapeamento do EF Core para a entidade <see cref="ParkingSession"/>.</summary>
 public sealed class ParkingSessionConfiguration : IEntityTypeConfiguration<ParkingSession>
 {
+    /// <summary>Configura a tabela, chave, propriedades (incluindo o objeto de valor <see cref="Money"/> embutido), relacionamento com <see cref="Spot"/> e índices de <see cref="ParkingSession"/>.</summary>
     public void Configure(EntityTypeBuilder<ParkingSession> builder)
     {
         builder.ToTable("ParkingSessions");

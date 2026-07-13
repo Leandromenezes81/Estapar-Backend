@@ -1,5 +1,6 @@
 namespace Estapar.ParkingManager.Domain.ValueObjects;
 
+/// <summary>Objeto de valor que representa uma quantia monetária com sua moeda.</summary>
 public sealed class Money : IEquatable<Money>
 {
     public const string DefaultCurrency = "BRL";
@@ -13,6 +14,7 @@ public sealed class Money : IEquatable<Money>
         Currency = currency;
     }
 
+    /// <summary>Cria uma quantia monetária, validando que o valor não é negativo e que a moeda foi informada.</summary>
     public static Money Create(decimal amount, string currency = DefaultCurrency)
     {
         if (amount < 0)
@@ -24,8 +26,10 @@ public sealed class Money : IEquatable<Money>
         return new Money(amount, currency.ToUpperInvariant());
     }
 
+    /// <summary>Cria uma quantia monetária zerada na moeda informada (ou na moeda padrão).</summary>
     public static Money Zero(string currency = DefaultCurrency) => Create(0m, currency);
 
+    /// <summary>Compara duas quantias monetárias por valor e moeda.</summary>
     public bool Equals(Money? other) =>
         other is not null && Amount == other.Amount && Currency == other.Currency;
 

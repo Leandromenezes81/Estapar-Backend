@@ -1,5 +1,6 @@
 namespace Estapar.ParkingManager.Domain.ValueObjects;
 
+/// <summary>Objeto de valor que representa a placa de um veículo, sempre normalizada em maiúsculas.</summary>
 public sealed class LicensePlate : IEquatable<LicensePlate>
 {
     public string Value { get; }
@@ -9,6 +10,7 @@ public sealed class LicensePlate : IEquatable<LicensePlate>
         Value = value;
     }
 
+    /// <summary>Cria uma placa a partir do texto informado, validando que não é vazio e normalizando para maiúsculas.</summary>
     public static LicensePlate Create(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -17,6 +19,7 @@ public sealed class LicensePlate : IEquatable<LicensePlate>
         return new LicensePlate(value.Trim().ToUpperInvariant());
     }
 
+    /// <summary>Compara duas placas pelo valor normalizado.</summary>
     public bool Equals(LicensePlate? other) =>
         other is not null && Value == other.Value;
 

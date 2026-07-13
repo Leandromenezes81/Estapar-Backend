@@ -5,8 +5,10 @@ using GarageEntity = Estapar.Garage.Api.Domain.Entities.Garage;
 
 namespace Estapar.Garage.Api.Infrastructure.Persistence.Configurations;
 
+/// <summary>Mapeamento do EF Core para a entidade <see cref="GarageEntity"/>.</summary>
 public sealed class GarageConfiguration : IEntityTypeConfiguration<GarageEntity>
 {
+    /// <summary>Configura a tabela, chave, propriedades, filtro de soft delete, relacionamentos com <see cref="Sector"/>/<see cref="Spot"/> e dados de seed de <see cref="GarageEntity"/>.</summary>
     public void Configure(EntityTypeBuilder<GarageEntity> builder)
     {
         builder.ToTable("Garages");

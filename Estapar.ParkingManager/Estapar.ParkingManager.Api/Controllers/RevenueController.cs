@@ -22,12 +22,12 @@ public sealed class RevenueController : ControllerBase
     }
 
     /// <summary>
-    /// Returns the total revenue for a sector on a given date. `sector` is the
-    /// sector's Id (not its name — the same name can repeat across different
-    /// garages, so revenue must be scoped to one specific sector instance).
-    /// The test spec shows GET with a JSON body (`{ "date": "...", "sector": ... }`);
-    /// we also accept `?date=&amp;sector=` query parameters for clients that
-    /// can't send a body on GET.
+    /// Retorna a receita total de um setor em uma data específica. `sector` é o
+    /// Id do setor (não seu nome — o mesmo nome pode se repetir entre garagens
+    /// diferentes, então a receita precisa ser calculada para uma instância
+    /// específica de setor). A especificação de teste mostra GET com corpo JSON
+    /// (`{ "date": "...", "sector": ... }`); também aceitamos os parâmetros de
+    /// query `?date=&amp;sector=` para clientes que não conseguem enviar corpo em GET.
     /// </summary>
     [HttpGet]
     public async Task<ActionResult<RevenueResponse>> Get(

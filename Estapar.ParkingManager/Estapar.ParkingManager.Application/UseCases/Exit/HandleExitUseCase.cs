@@ -4,8 +4,8 @@ using Estapar.ParkingManager.Domain.Exceptions;
 namespace Estapar.ParkingManager.Application.UseCases.Exit;
 
 /// <summary>
-/// Handles an EXIT event: closes the session (charging the fee using the
-/// locked-in price factor and the sector's base price) and releases the spot.
+/// Trata um evento EXIT: encerra a sessão (cobrando a tarifa com o fator de
+/// preço travado e o preço base do setor) e libera a vaga.
 /// </summary>
 public sealed class HandleExitUseCase
 {
@@ -26,6 +26,7 @@ public sealed class HandleExitUseCase
         _unitOfWork = unitOfWork;
     }
 
+    /// <summary>Processa o evento EXIT informado, lançando <see cref="Estapar.ParkingManager.Domain.Exceptions.SessionNotFoundException"/> se não houver sessão em aberto para a placa.</summary>
     public async Task HandleAsync(ExitCommand command, CancellationToken cancellationToken = default)
     {
         var session = await _sessions.GetOpenByLicensePlateAsync(command.LicensePlate, cancellationToken)

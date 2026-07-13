@@ -1,7 +1,8 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 
 namespace Estapar.ParkingManager.Domain.Enums;
 
+/// <summary>Provedores de execução de jobs em segundo plano suportados pela aplicação. Atualmente apenas <see cref="Quartz"/> é utilizado.</summary>
 public enum BackgroundServicesProvider
 {
     [Description("Worker Services")]

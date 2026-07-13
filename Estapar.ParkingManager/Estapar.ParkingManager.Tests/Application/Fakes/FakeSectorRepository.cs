@@ -3,7 +3,7 @@ using Estapar.ParkingManager.Domain.Entities;
 
 namespace Estapar.ParkingManager.Tests.Application.Fakes;
 
-/// <summary>In-memory ISectorRepository used by Application-layer tests instead of a mocking library.</summary>
+/// <summary>Implementação em memória de ISectorRepository, usada pelos testes da camada Application em vez de uma biblioteca de mocking.</summary>
 public sealed class FakeSectorRepository : ISectorRepository
 {
     private readonly List<Sector> _sectors;

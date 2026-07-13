@@ -1,6 +1,6 @@
 namespace Estapar.Garage.Api.Domain.Entities;
 
-/// <summary>A logical, pricing/capacity division of a garage's pool of spots.</summary>
+/// <summary>Uma divisão lógica de precificação/capacidade do conjunto de vagas de uma garagem.</summary>
 public sealed class Sector
 {
     public int Id { get; private set; }
@@ -22,6 +22,7 @@ public sealed class Sector
         IsDeleted = false;
     }
 
+    /// <summary>Cria um novo setor pertencente à garagem informada, validando nome, preço base e capacidade máxima.</summary>
     internal static Sector Create(Garage garage, string name, decimal basePrice, int maxCapacity)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -36,5 +37,6 @@ public sealed class Sector
         return new Sector(garage, name, basePrice, maxCapacity);
     }
 
+    /// <summary>Marca o setor como removido, sem excluí-lo fisicamente.</summary>
     public void SoftDelete() => IsDeleted = true;
 }

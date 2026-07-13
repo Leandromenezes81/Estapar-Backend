@@ -3,7 +3,7 @@ using Estapar.ParkingManager.Application.Interfaces;
 
 namespace Estapar.ParkingManager.Tests.Application.Fakes;
 
-/// <summary>Stub IGarageConfigClient returning a canned GET /garage payload instead of calling Estapar.Garage.Api over HTTP.</summary>
+/// <summary>Stub de IGarageConfigClient que retorna um payload fixo de GET /garage em vez de chamar a Estapar.Garage.Api via HTTP.</summary>
 public sealed class FakeGarageConfigClient : IGarageConfigClient
 {
     private readonly List<GarageConfigDto> _garages;

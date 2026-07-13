@@ -4,9 +4,9 @@ using Estapar.ParkingManager.Domain.ValueObjects;
 namespace Estapar.ParkingManager.Domain.Entities;
 
 /// <summary>
-/// Aggregate root representing a single vehicle's parking cycle, from
-/// ENTRY to EXIT. The dynamic price factor is calculated and locked in
-/// at entry time, based on the sector's occupancy at that moment.
+/// Raiz de agregação que representa o ciclo de estacionamento de um único veículo,
+/// da ENTRY à EXIT. O fator de preço dinâmico é calculado e travado no momento da
+/// entrada, com base na ocupação do setor naquele instante.
 /// </summary>
 public sealed class ParkingSession
 {
@@ -32,6 +32,7 @@ public sealed class ParkingSession
         LockedPriceFactor = lockedPriceFactor;
     }
 
+    /// <summary>Abre uma nova sessão de estacionamento para o veículo, travando o fator de preço vigente no setor.</summary>
     public static ParkingSession Open(LicensePlate licensePlate, int sectorId, DateTime entryTime, decimal lockedPriceFactor)
     {
         if (sectorId <= 0)
@@ -40,6 +41,7 @@ public sealed class ParkingSession
         return new ParkingSession(Guid.NewGuid(), licensePlate, sectorId, entryTime, lockedPriceFactor);
     }
 
+    /// <summary>Atribui a vaga física ocupada pelo veículo à sessão em aberto.</summary>
     public void AssignSpot(int spotId)
     {
         if (!IsOpen)
@@ -48,6 +50,7 @@ public sealed class ParkingSession
         SpotId = spotId;
     }
 
+    /// <summary>Encerra a sessão, calculando o valor cobrado a partir do preço base do setor e do fator travado na entrada.</summary>
     public void Close(DateTime exitTime, decimal sectorBasePrice)
     {
         if (!IsOpen)

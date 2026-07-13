@@ -3,7 +3,7 @@ using GarageEntity = Estapar.Garage.Api.Domain.Entities.Garage;
 
 namespace Estapar.Garage.Tests.Application.Fakes;
 
-/// <summary>In-memory IGarageRepository used by Application-layer tests instead of a mocking library.</summary>
+/// <summary>Implementação em memória de IGarageRepository, usada pelos testes da camada Application em vez de uma biblioteca de mocking.</summary>
 public sealed class FakeGarageRepository : IGarageRepository
 {
     private readonly List<GarageEntity> _garages;

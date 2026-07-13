@@ -3,8 +3,10 @@ using Estapar.Garage.Api.Auth;
 
 namespace Estapar.Garage.Api.Endpoints;
 
+/// <summary>Endpoints de autenticação (emissão de token JWT) da Estapar.Garage.Api.</summary>
 public static class AuthEndpoints
 {
+    /// <summary>Mapeia o endpoint POST /auth/token.</summary>
     public static IEndpointRouteBuilder MapAuthEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapPost("/auth/token", (TokenRequest request, IConfiguration configuration, JwtTokenService tokenService) =>

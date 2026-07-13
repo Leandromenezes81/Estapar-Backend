@@ -1,6 +1,6 @@
 namespace Estapar.Garage.Api.Middleware;
 
-/// <summary>Maps domain validation exceptions to HTTP status codes for every request.</summary>
+/// <summary>Mapeia exceções de validação de domínio para códigos de status HTTP em todas as requisições.</summary>
 public sealed class ExceptionHandlingMiddleware
 {
     private readonly RequestDelegate _next;
@@ -12,6 +12,7 @@ public sealed class ExceptionHandlingMiddleware
         _logger = logger;
     }
 
+    /// <summary>Executa o próximo middleware do pipeline, capturando exceções não tratadas e convertendo-as em uma resposta JSON padronizada.</summary>
     public async Task InvokeAsync(HttpContext context)
     {
         try
@@ -21,7 +22,7 @@ public sealed class ExceptionHandlingMiddleware
         catch (Exception ex)
         {
             var (statusCode, message) = MapException(ex);
-            _logger.LogWarning(ex, "Request {Method} {Path} failed: {Message}", context.Request.Method, context.Request.Path, ex.Message);
+            _logger.LogWarning(ex, "A requisição {Method} {Path} falhou: {Message}", context.Request.Method, context.Request.Path, ex.Message);
 
             context.Response.StatusCode = statusCode;
             context.Response.ContentType = "application/json";
@@ -29,10 +30,11 @@ public sealed class ExceptionHandlingMiddleware
         }
     }
 
+    /// <summary>Traduz cada tipo de exceção conhecido para o par (código HTTP, mensagem) correspondente.</summary>
     private static (int StatusCode, string Message) MapException(Exception ex) => ex switch
     {
         ArgumentException e => (StatusCodes.Status400BadRequest, e.Message),
         InvalidOperationException e => (StatusCodes.Status400BadRequest, e.Message),
-        _ => (StatusCodes.Status500InternalServerError, "An unexpected error occurred.")
+        _ => (StatusCodes.Status500InternalServerError, "Ocorreu um erro inesperado.")
     };
 }

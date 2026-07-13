@@ -3,14 +3,15 @@ using Estapar.ParkingManager.Domain.ValueObjects;
 namespace Estapar.ParkingManager.Domain.Services;
 
 /// <summary>
-/// Calculates the fee charged for a parking session: the first 30 minutes
-/// are free, and every started hour after that is charged at the sector's
-/// base price adjusted by the dynamic price factor locked in at entry.
+/// Calcula a tarifa cobrada por uma sessão de estacionamento: os primeiros 30 minutos
+/// são gratuitos, e cada hora iniciada depois disso é cobrada pelo preço base do setor
+/// ajustado pelo fator de preço dinâmico travado na entrada.
 /// </summary>
 public static class FeeCalculator
 {
     private static readonly TimeSpan FreeThreshold = TimeSpan.FromMinutes(30);
 
+    /// <summary>Calcula o valor a ser cobrado com base no tempo de permanência, no preço base do setor e no fator de preço travado.</summary>
     public static Money Calculate(DateTime entryTime, DateTime exitTime, decimal basePrice, decimal priceFactor)
     {
         if (exitTime < entryTime)

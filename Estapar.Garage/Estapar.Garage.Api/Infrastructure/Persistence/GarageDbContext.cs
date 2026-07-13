@@ -4,6 +4,7 @@ using GarageEntity = Estapar.Garage.Api.Domain.Entities.Garage;
 
 namespace Estapar.Garage.Api.Infrastructure.Persistence;
 
+/// <summary>Contexto do EF Core para a Estapar.Garage.Api, com os conjuntos de garagens, setores e vagas.</summary>
 public sealed class GarageDbContext : DbContext
 {
     public DbSet<GarageEntity> Garages => Set<GarageEntity>();
@@ -14,6 +15,7 @@ public sealed class GarageDbContext : DbContext
     {
     }
 
+    /// <summary>Aplica todas as configurações de entidade (<see cref="IEntityTypeConfiguration{TEntity}"/>) definidas no assembly.</summary>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(GarageDbContext).Assembly);

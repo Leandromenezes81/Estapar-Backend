@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Estapar.Garage.Api.Infrastructure.Persistence.Configurations;
 
+/// <summary>Mapeamento do EF Core para a entidade <see cref="Sector"/>.</summary>
 public sealed class SectorConfiguration : IEntityTypeConfiguration<Sector>
 {
+    /// <summary>Configura a tabela, chave, propriedades, filtro de soft delete e dados de seed de <see cref="Sector"/>.</summary>
     public void Configure(EntityTypeBuilder<Sector> builder)
     {
         builder.ToTable("Sectors");

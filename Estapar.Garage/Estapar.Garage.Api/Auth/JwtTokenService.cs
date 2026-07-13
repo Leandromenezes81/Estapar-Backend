@@ -8,6 +8,7 @@ namespace Estapar.Garage.Api.Auth;
 /// <summary>Emite JWTs assinados com a chave simétrica configurada em "Jwt:Key".</summary>
 public sealed class JwtTokenService(IConfiguration configuration)
 {
+    /// <summary>Gera um token JWT assinado para o cliente informado, com o tempo de expiração configurado em "Jwt:ExpirationMinutes".</summary>
     public (string AccessToken, int ExpiresIn) GenerateToken(string clientId)
     {
         var jwtSection = configuration.GetSection("Jwt");

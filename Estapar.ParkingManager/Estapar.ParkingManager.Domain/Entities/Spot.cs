@@ -2,7 +2,7 @@ using Estapar.ParkingManager.Domain.Enums;
 
 namespace Estapar.ParkingManager.Domain.Entities;
 
-/// <summary>A single physical parking spot belonging to a sector.</summary>
+/// <summary>Uma vaga física individual pertencente a um setor.</summary>
 public sealed class Spot
 {
     public int Id { get; private set; }
@@ -22,6 +22,7 @@ public sealed class Spot
         Status = SpotStatus.AVAILABLE;
     }
 
+    /// <summary>Cria uma nova vaga disponível, validando o Id do setor ao qual ela pertence.</summary>
     public static Spot Create(int id, int sectorId, double lat, double lng)
     {
         if (sectorId <= 0)
@@ -32,6 +33,7 @@ public sealed class Spot
 
     public bool IsAvailable => Status == SpotStatus.AVAILABLE;
 
+    /// <summary>Marca a vaga como ocupada. Lança exceção se ela já estiver ocupada.</summary>
     public void Occupy()
     {
         if (Status == SpotStatus.OCCUPIED)
@@ -40,6 +42,7 @@ public sealed class Spot
         Status = SpotStatus.OCCUPIED;
     }
 
+    /// <summary>Libera a vaga, tornando-a disponível novamente.</summary>
     public void Release()
     {
         Status = SpotStatus.AVAILABLE;

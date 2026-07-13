@@ -3,7 +3,7 @@ using Estapar.ParkingManager.Domain.Entities;
 
 namespace Estapar.ParkingManager.Tests.Application.Fakes;
 
-/// <summary>In-memory ISpotRepository used by Application-layer tests instead of a mocking library.</summary>
+/// <summary>Implementação em memória de ISpotRepository, usada pelos testes da camada Application em vez de uma biblioteca de mocking.</summary>
 public sealed class FakeSpotRepository : ISpotRepository
 {
     private readonly List<Spot> _spots;

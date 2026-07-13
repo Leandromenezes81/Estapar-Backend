@@ -4,7 +4,7 @@ using Estapar.ParkingManager.Domain.Exceptions;
 
 namespace Estapar.ParkingManager.Api.Middleware;
 
-/// <summary>Maps domain/application exceptions to HTTP status codes for every request.</summary>
+/// <summary>Mapeia exceções de domínio/aplicação para códigos de status HTTP em todas as requisições.</summary>
 public sealed class ExceptionHandlingMiddleware
 {
     private readonly RequestDelegate _next;
@@ -16,6 +16,7 @@ public sealed class ExceptionHandlingMiddleware
         _logger = logger;
     }
 
+    /// <summary>Executa o próximo middleware do pipeline, capturando exceções não tratadas e convertendo-as em uma resposta padronizada.</summary>
     public async Task InvokeAsync(HttpContext context)
     {
         try
@@ -37,6 +38,7 @@ public sealed class ExceptionHandlingMiddleware
         }
     }
 
+    /// <summary>Traduz cada tipo de exceção conhecido para o par (código HTTP, mensagem) correspondente.</summary>
     private static (int StatusCode, string Message) MapException(Exception ex) => ex switch
     {
         GarageFullException e => (StatusCodes.Status409Conflict, e.Message),

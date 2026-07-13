@@ -1,6 +1,6 @@
 namespace Estapar.Garage.Api.Domain.Entities;
 
-/// <summary>A single physical parking spot, belonging to both a garage and one of its sectors.</summary>
+/// <summary>Uma vaga física individual, pertencente tanto a uma garagem quanto a um de seus setores.</summary>
 public sealed class Spot
 {
     public int Id { get; private set; }
@@ -25,6 +25,7 @@ public sealed class Spot
         IsDeleted = false;
     }
 
+    /// <summary>Cria uma nova vaga pertencente à garagem e ao setor informados, validando o código.</summary>
     internal static Spot Create(Garage garage, Sector sector, string code, double lat, double lng)
     {
         if (string.IsNullOrWhiteSpace(code))
@@ -33,5 +34,6 @@ public sealed class Spot
         return new Spot(garage, sector, code, lat, lng);
     }
 
+    /// <summary>Marca a vaga como removida, sem excluí-la fisicamente.</summary>
     public void SoftDelete() => IsDeleted = true;
 }

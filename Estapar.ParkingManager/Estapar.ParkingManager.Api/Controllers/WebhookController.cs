@@ -18,7 +18,7 @@ public sealed class WebhookController : ControllerBase
         _response = response;
     }
 
-    /// <summary>Receives ENTRY, PARKED and EXIT events from the simulator.</summary>
+    /// <summary>Recebe eventos ENTRY, PARKED e EXIT enviados pelo simulador.</summary>
     [HttpPost]
     public async Task<IActionResult> Handle([FromBody] WebhookEventDto dto, CancellationToken cancellationToken)
     {

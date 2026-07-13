@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace Estapar.ParkingManager.Application.DTO;
 
+/// <summary>Resposta do endpoint GET /revenue com o valor total arrecadado.</summary>
 public sealed record RevenueResponse(
     [property: JsonPropertyName("amount")] decimal Amount,
     [property: JsonPropertyName("currency")] string Currency,

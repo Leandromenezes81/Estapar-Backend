@@ -1,8 +1,8 @@
 namespace Estapar.Garage.Api.Domain.Entities;
 
 /// <summary>
-/// Aggregate root: a physical garage, its logical pricing/capacity divisions (Sectors)
-/// and the individual parking spots (Spots) that belong to it.
+/// Raiz de agregação: uma garagem física, suas divisões lógicas de precificação/capacidade
+/// (Sectors) e as vagas individuais (Spots) que pertencem a ela.
 /// </summary>
 public sealed class Garage
 {
@@ -26,6 +26,7 @@ public sealed class Garage
         CreatedAt = DateTime.UtcNow;
     }
 
+    /// <summary>Cria uma nova garagem com o nome informado.</summary>
     public static Garage Create(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -34,6 +35,7 @@ public sealed class Garage
         return new Garage(name);
     }
 
+    /// <summary>Altera o nome da garagem.</summary>
     public void Rename(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -42,6 +44,7 @@ public sealed class Garage
         Name = name;
     }
 
+    /// <summary>Adiciona um novo setor a esta garagem.</summary>
     public Sector AddSector(string name, decimal basePrice, int maxCapacity)
     {
         var sector = Sector.Create(this, name, basePrice, maxCapacity);
@@ -49,6 +52,7 @@ public sealed class Garage
         return sector;
     }
 
+    /// <summary>Adiciona uma nova vaga a um setor desta garagem, validando que o setor pertence a ela.</summary>
     public Spot AddSpot(Sector sector, string code, double lat, double lng)
     {
         if (!ReferenceEquals(sector, _sectors.Find(s => s == sector)))
@@ -59,6 +63,7 @@ public sealed class Garage
         return spot;
     }
 
+    /// <summary>Marca a garagem e todos os seus setores/vagas como removidos, sem excluí-los fisicamente.</summary>
     public void SoftDelete()
     {
         IsDeleted = true;
@@ -67,9 +72,9 @@ public sealed class Garage
     }
 
     /// <summary>
-    /// Replaces the whole set of sectors/spots: soft-deletes everything currently
-    /// attached and re-creates it from <paramref name="sectors"/>. Simpler and safer
-    /// than reconciling child entities one by one for a CRUD scoped to the aggregate.
+    /// Substitui todo o conjunto de setores/vagas: remove (soft delete) tudo que está
+    /// vinculado atualmente e recria a partir de <paramref name="sectors"/>. Mais simples
+    /// e seguro do que reconciliar as entidades filhas uma a uma para um CRUD restrito ao agregado.
     /// </summary>
     public void ReplaceSectorsAndSpots(IEnumerable<(string Name, decimal BasePrice, int MaxCapacity, IEnumerable<(string Code, double Lat, double Lng)> Spots)> sectors)
     {

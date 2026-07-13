@@ -6,6 +6,7 @@ using Quartz;
 
 namespace Estapar.ParkingManager.Infrastructure.BackgroundServices.Jobs;
 
+/// <summary>Job do Quartz que sincroniza periodicamente a configuração de garagens/setores/vagas a partir do simulador (GET /garage).</summary>
 [DisallowConcurrentExecution]
 [JobAttribute(jobGroup: typeof(Domain.Entities.Sector), description: "Configuração da garagem no Simulador")]
 public class LoadGarageConfigurationJob : IJob
@@ -19,6 +20,7 @@ public class LoadGarageConfigurationJob : IJob
         _logger = logger;
     }
 
+    /// <summary>Executa o caso de uso de carga da configuração da garagem dentro de um escopo de DI próprio.</summary>
     public async Task Execute(IJobExecutionContext context)
     {
         using var scope = _serviceProvider.CreateScope();

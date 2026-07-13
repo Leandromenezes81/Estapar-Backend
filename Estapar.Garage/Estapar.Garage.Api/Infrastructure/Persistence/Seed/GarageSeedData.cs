@@ -1,9 +1,10 @@
 namespace Estapar.Garage.Api.Infrastructure.Persistence.Seed;
 
 /// <summary>
-/// Deterministic seed data used by the entity configurations' HasData calls: 5 garages,
-/// each with 4 sectors (named A-D) of 20 spots each (named "&lt;Sector&gt;&lt;n&gt;", e.g. "A1"-"A20").
-/// Values must stay fixed once a migration has shipped — HasData diffs by primary key.
+/// Dados de seed determinísticos usados pelas chamadas HasData das configurações de entidade:
+/// 5 garagens, cada uma com 4 setores (nomeados A-D) de 20 vagas cada (nomeadas "&lt;Setor&gt;&lt;n&gt;",
+/// ex.: "A1"-"A20"). Os valores devem permanecer fixos assim que uma migration for publicada —
+/// o HasData compara por chave primária.
 /// </summary>
 public static class GarageSeedData
 {
@@ -13,6 +14,7 @@ public static class GarageSeedData
 
     private static readonly DateTime SeedCreatedAt = new(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
+    /// <summary>Gera os dados de seed das garagens.</summary>
     public static IEnumerable<object> Garages() =>
         Enumerable.Range(1, GarageCount).Select(garageId => new
         {
@@ -22,6 +24,7 @@ public static class GarageSeedData
             CreatedAt = SeedCreatedAt
         });
 
+    /// <summary>Gera os dados de seed dos setores, distribuídos igualmente entre as garagens.</summary>
     public static IEnumerable<object> Sectors()
     {
         var sectorId = 1;
@@ -43,6 +46,7 @@ public static class GarageSeedData
         }
     }
 
+    /// <summary>Gera os dados de seed das vagas, distribuídas igualmente entre os setores de cada garagem.</summary>
     public static IEnumerable<object> Spots()
     {
         var spotId = 1;
@@ -74,5 +78,6 @@ public static class GarageSeedData
         }
     }
 
+    /// <summary>Converte o índice do setor em seu nome de uma letra (0 → "A", 1 → "B", ...).</summary>
     private static string SectorName(int sectorIndex) => ((char)('A' + sectorIndex)).ToString();
 }

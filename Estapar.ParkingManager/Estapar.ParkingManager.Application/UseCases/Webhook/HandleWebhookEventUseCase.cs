@@ -7,9 +7,9 @@ using Estapar.ParkingManager.Domain.Enums;
 namespace Estapar.ParkingManager.Application.UseCases.Webhook;
 
 /// <summary>
-/// Reads the flat webhook DTO in two passes: inspects <c>event_type</c>
-/// first, then dispatches to the matching use case with its required
-/// fields validated.
+/// Lê o DTO plano do webhook em duas etapas: primeiro inspeciona
+/// <c>event_type</c> e depois despacha para o caso de uso correspondente,
+/// validando os campos obrigatórios de cada tipo de evento.
 /// </summary>
 public sealed class HandleWebhookEventUseCase
 {
@@ -27,6 +27,7 @@ public sealed class HandleWebhookEventUseCase
         _exitUseCase = exitUseCase;
     }
 
+    /// <summary>Despacha o evento recebido para o caso de uso correspondente ao seu <see cref="EventType"/>.</summary>
     public Task HandleAsync(WebhookEventDto dto, CancellationToken cancellationToken = default) =>
         dto.EventType switch
         {

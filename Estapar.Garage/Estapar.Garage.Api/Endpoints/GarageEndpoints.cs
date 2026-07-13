@@ -4,8 +4,10 @@ using Estapar.Garage.Api.Filters;
 
 namespace Estapar.Garage.Api.Endpoints;
 
+/// <summary>Endpoints de garagens: GET /garage (protegido por API Key) e o CRUD /garages (protegido por JWT).</summary>
 public static class GarageEndpoints
 {
+    /// <summary>Mapeia GET /garage e o grupo de endpoints /garages (CRUD).</summary>
     public static IEndpointRouteBuilder MapGarageEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapGet("/garage", async (GarageService service, CancellationToken cancellationToken) =>

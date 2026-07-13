@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Estapar.Garage.Api.Infrastructure.Persistence.Configurations;
 
+/// <summary>Mapeamento do EF Core para a entidade <see cref="Spot"/>.</summary>
 public sealed class SpotConfiguration : IEntityTypeConfiguration<Spot>
 {
+    /// <summary>Configura a tabela, chave, propriedades, filtro de soft delete, relacionamento com <see cref="Sector"/> e dados de seed de <see cref="Spot"/>.</summary>
     public void Configure(EntityTypeBuilder<Spot> builder)
     {
         builder.ToTable("Spots");

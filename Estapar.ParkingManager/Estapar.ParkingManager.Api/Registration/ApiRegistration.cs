@@ -18,17 +18,18 @@ public static class ApiRegistration
     {
         services.AddControllers(options =>
             {
-                // Non-nullable reference type parameters (e.g. "WebhookEventDto dto") get an
-                // implicit [Required] from [ApiController], whose default message ("The {0}
-                // field is required.") comes from System.ComponentModel.DataAnnotations —
-                // this environment has no pt-BR satellite resource for it, and it duplicates
-                // the (already pt-BR) MissingRequestBodyRequiredValueAccessor message below
-                // for an empty body, so it's suppressed rather than left in English.
+                // Parâmetros de tipo de referência não anuláveis (ex.: "WebhookEventDto dto")
+                // recebem um [Required] implícito do [ApiController], cuja mensagem padrão
+                // ("The {0} field is required.") vem do System.ComponentModel.DataAnnotations —
+                // este ambiente não tem um recurso satélite pt-BR para ela, e ela duplica a
+                // mensagem (já em pt-BR) de MissingRequestBodyRequiredValueAccessor abaixo para
+                // um corpo vazio, por isso é suprimida em vez de ficar em inglês.
                 options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
 
-                // The framework's built-in model-binding messages (missing body, missing
-                // required field, wrong type, etc.) are hard-coded English literals, not
-                // localized resources — they must be overridden explicitly to get pt-BR.
+                // As mensagens de model-binding embutidas no framework (corpo ausente, campo
+                // obrigatório ausente, tipo incorreto etc.) são literais fixos em inglês, não
+                // recursos localizados — precisam ser sobrescritas explicitamente para ficarem
+                // em pt-BR.
                 var provider = options.ModelBindingMessageProvider;
                 provider.SetMissingBindRequiredValueAccessor(name => $"O campo '{name}' é obrigatório.");
                 provider.SetMissingKeyOrValueAccessor(() => "É necessário informar um valor.");
@@ -44,10 +45,11 @@ public static class ApiRegistration
             })
             .ConfigureApiBehaviorOptions(options =>
             {
-                // [ApiController] short-circuits with its own ValidationProblemDetails on invalid
-                // model state (e.g. malformed JSON, missing required fields) before the action or
-                // the exception middleware ever runs — wrap that response in Response too, so every
-                // error path from this API is shaped consistently.
+                // [ApiController] interrompe o fluxo com seu próprio ValidationProblemDetails
+                // quando o model state é inválido (ex.: JSON malformado, campos obrigatórios
+                // ausentes) antes mesmo da action ou do middleware de exceção rodarem — envolve
+                // essa resposta em Response também, para que todo caminho de erro desta API
+                // tenha o mesmo formato.
                 options.InvalidModelStateResponseFactory = context =>
                 {
                     var response = context.HttpContext.RequestServices.GetRequiredService<Response>();

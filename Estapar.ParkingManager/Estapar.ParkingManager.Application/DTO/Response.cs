@@ -1,7 +1,8 @@
-﻿using System.Net;
+using System.Net;
 
 namespace Estapar.ParkingManager.Application.DTO;
 
+/// <summary>Envelope de resposta padrão retornado por todos os endpoints da Estapar.ParkingManager.Api, tanto em caso de sucesso quanto de erro.</summary>
 public partial class Response
 {
     public IList<string> ErrorMessages { get; private set; } = [];

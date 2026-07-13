@@ -5,15 +5,16 @@ using Estapar.ParkingManager.Infrastructure.BackgroundServices.Registration;
 using Estapar.ParkingManager.Infrastructure.Data.Registration;
 using System.Globalization;
 
-// Only the UI culture (resource string language, e.g. built-in DataAnnotations
-// messages) changes here — CurrentCulture is left untouched so request/response
-// number and date parsing/formatting keeps using invariant (dot decimals, ISO dates).
+// Apenas a UI culture (idioma dos recursos de string, ex.: mensagens embutidas
+// do DataAnnotations) é alterada aqui — CurrentCulture é deixada intacta para que
+// o parsing/formatação de número e data de request/response continue usando o
+// padrão invariante (decimais com ponto, datas ISO).
 var ptBr = new CultureInfo("pt-BR");
 CultureInfo.DefaultThreadCurrentUICulture = ptBr;
 
-// WebApplication.CreateBuilder already loads, in order, appsettings.json,
-// appsettings.{EnvironmentName}.json, environment variables and command-line
-// args — no need to add any of these manually.
+// WebApplication.CreateBuilder já carrega, em ordem, appsettings.json,
+// appsettings.{EnvironmentName}.json, variáveis de ambiente e argumentos de linha
+// de comando — não é necessário adicionar nenhum deles manualmente.
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApi();

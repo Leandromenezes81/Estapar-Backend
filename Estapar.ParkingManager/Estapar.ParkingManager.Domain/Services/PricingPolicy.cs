@@ -1,8 +1,8 @@
 namespace Estapar.ParkingManager.Domain.Services;
 
 /// <summary>
-/// Dynamic pricing table applied to a sector's base price based on its
-/// occupancy ratio at the moment a vehicle enters.
+/// Tabela de precificação dinâmica aplicada ao preço base de um setor, com base na
+/// sua taxa de ocupação no momento em que um veículo entra.
 /// </summary>
 public static class PricingPolicy
 {
@@ -15,7 +15,8 @@ public static class PricingPolicy
     private const decimal SurchargeFactor = 1.10m;
     private const decimal HighSurchargeFactor = 1.25m;
 
-    /// <param name="occupancyRatio">Ratio of occupied spots to sector capacity, in the range [0, 1].</param>
+    /// <summary>Calcula o fator de preço aplicável para a taxa de ocupação informada.</summary>
+    /// <param name="occupancyRatio">Taxa de vagas ocupadas em relação à capacidade do setor, no intervalo [0, 1].</param>
     public static decimal CalculateFactor(decimal occupancyRatio)
     {
         if (occupancyRatio < 0)

@@ -4,14 +4,14 @@ using Estapar.ParkingManager.Domain.Enums;
 namespace Estapar.ParkingManager.Application.DTO;
 
 /// <summary>
-/// Flat representation of the three possible /webhook payloads (ENTRY,
-/// PARKED, EXIT), discriminated by <see cref="EventType"/>. Fields not
-/// relevant to a given event type are left null.
+/// Representação plana dos três possíveis payloads de /webhook (ENTRY,
+/// PARKED, EXIT), discriminados por <see cref="EventType"/>. Campos não
+/// relevantes para um determinado tipo de evento ficam nulos.
 ///
-/// Assumption: ENTRY carries a "sector" field (now holding the sector's Id
-/// rather than its name) even though it is not shown in the ENTRY example
-/// of the test spec, since the dynamic price factor must be locked in
-/// per-sector at entry time.
+/// Premissa: ENTRY carrega um campo "sector" (agora contendo o Id do setor
+/// em vez do seu nome) mesmo não estando presente no exemplo de ENTRY da
+/// especificação de teste, já que o fator de preço dinâmico precisa ser
+/// travado por setor no momento da entrada.
 /// </summary>
 public sealed class WebhookEventDto
 {

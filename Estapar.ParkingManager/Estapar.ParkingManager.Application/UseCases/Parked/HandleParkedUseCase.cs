@@ -4,9 +4,9 @@ using Estapar.ParkingManager.Domain.Exceptions;
 namespace Estapar.ParkingManager.Application.UseCases.Parked;
 
 /// <summary>
-/// Handles a PARKED event: resolves the physical spot from lat/lng,
-/// marks it occupied, and links it to the vehicle's open session. The
-/// price factor was already locked in at ENTRY.
+/// Trata um evento PARKED: resolve a vaga física a partir de lat/lng,
+/// marca-a como ocupada e a vincula à sessão em aberto do veículo. O fator
+/// de preço já foi travado na ENTRY.
 /// </summary>
 public sealed class HandleParkedUseCase
 {
@@ -21,6 +21,7 @@ public sealed class HandleParkedUseCase
         _unitOfWork = unitOfWork;
     }
 
+    /// <summary>Processa o evento PARKED informado, lançando <see cref="Estapar.ParkingManager.Domain.Exceptions.SessionNotFoundException"/> se não houver sessão em aberto para a placa.</summary>
     public async Task HandleAsync(ParkedCommand command, CancellationToken cancellationToken = default)
     {
         var session = await _sessions.GetOpenByLicensePlateAsync(command.LicensePlate, cancellationToken)

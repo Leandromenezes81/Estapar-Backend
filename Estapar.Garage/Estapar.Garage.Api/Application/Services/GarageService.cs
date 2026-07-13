@@ -4,7 +4,7 @@ using GarageEntity = Estapar.Garage.Api.Domain.Entities.Garage;
 
 namespace Estapar.Garage.Api.Application.Services;
 
-/// <summary>Use cases for the Garage aggregate: the /garage integration contract and the CRUD.</summary>
+/// <summary>Casos de uso do agregado Garage: o contrato de integração /garage e o CRUD.</summary>
 public sealed class GarageService
 {
     private readonly IGarageRepository _repository;
@@ -14,19 +14,21 @@ public sealed class GarageService
         _repository = repository;
     }
 
-    /// <summary>Builds the GET /garage payload consumed by Estapar.ParkingManager — same aggregate shape as GetByIdAsync, for every garage.</summary>
+    /// <summary>Monta o payload do GET /garage consumido pelo Estapar.ParkingManager — mesmo formato de agregado do GetByIdAsync, para cada garagem.</summary>
     public async Task<List<GarageResponse>> GetGarageConfigurationAsync(CancellationToken cancellationToken = default)
     {
         var garages = await _repository.GetAllAsync(cancellationToken);
         return garages.Select(ToResponse).ToList();
     }
 
+    /// <summary>Busca uma garagem pelo Id, retornando null se não existir.</summary>
     public async Task<GarageResponse?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         var garage = await _repository.GetByIdAsync(id, cancellationToken);
         return garage is null ? null : ToResponse(garage);
     }
 
+    /// <summary>Cria uma nova garagem com os setores e vagas informados.</summary>
     public async Task<GarageResponse> CreateAsync(CreateGarageRequest request, CancellationToken cancellationToken = default)
     {
         var garage = GarageEntity.Create(request.Name);
@@ -44,6 +46,7 @@ public sealed class GarageService
         return ToResponse(garage);
     }
 
+    /// <summary>Atualiza o nome e substitui todo o conjunto de setores/vagas de uma garagem, retornando false se ela não existir.</summary>
     public async Task<bool> UpdateAsync(int id, UpdateGarageRequest request, CancellationToken cancellationToken = default)
     {
         var garage = await _repository.GetByIdAsync(id, cancellationToken);
@@ -57,6 +60,7 @@ public sealed class GarageService
         return true;
     }
 
+    /// <summary>Remove (soft delete) uma garagem e seus setores/vagas, retornando false se ela não existir.</summary>
     public async Task<bool> SoftDeleteAsync(int id, CancellationToken cancellationToken = default)
     {
         var garage = await _repository.GetByIdAsync(id, cancellationToken);
@@ -67,6 +71,7 @@ public sealed class GarageService
         return true;
     }
 
+    /// <summary>Converte a entidade de domínio <see cref="GarageEntity"/> no DTO de resposta agregado, com seus setores e vagas.</summary>
     private static GarageResponse ToResponse(GarageEntity garage) => new(
         garage.Id,
         garage.Name,

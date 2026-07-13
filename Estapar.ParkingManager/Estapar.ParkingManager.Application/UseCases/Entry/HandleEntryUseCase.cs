@@ -6,9 +6,9 @@ using Estapar.ParkingManager.Domain.ValueObjects;
 namespace Estapar.ParkingManager.Application.UseCases.Entry;
 
 /// <summary>
-/// Handles an ENTRY event: checks the sector isn't full, locks in the
-/// dynamic price factor for the sector's occupancy at this moment, and
-/// opens a new parking session.
+/// Trata um evento ENTRY: verifica se o setor não está cheio, trava o fator
+/// de preço dinâmico conforme a ocupação do setor no momento e abre uma
+/// nova sessão de estacionamento.
 /// </summary>
 public sealed class HandleEntryUseCase
 {
@@ -23,6 +23,7 @@ public sealed class HandleEntryUseCase
         _unitOfWork = unitOfWork;
     }
 
+    /// <summary>Processa o evento ENTRY informado, lançando <see cref="Estapar.ParkingManager.Domain.Exceptions.GarageFullException"/> se o setor estiver cheio.</summary>
     public async Task HandleAsync(EntryCommand command, CancellationToken cancellationToken = default)
     {
         var sector = await _sectors.GetByIdAsync(command.SectorId, cancellationToken)
