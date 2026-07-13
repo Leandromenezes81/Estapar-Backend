@@ -16,10 +16,10 @@ public sealed class Money : IEquatable<Money>
     public static Money Create(decimal amount, string currency = DefaultCurrency)
     {
         if (amount < 0)
-            throw new ArgumentOutOfRangeException(nameof(amount), "Amount cannot be negative.");
+            throw new ArgumentOutOfRangeException(nameof(amount), "O valor não pode ser negativo.");
 
         if (string.IsNullOrWhiteSpace(currency))
-            throw new ArgumentException("Currency cannot be empty.", nameof(currency));
+            throw new ArgumentException("A moeda não pode ser vazia.", nameof(currency));
 
         return new Money(amount, currency.ToUpperInvariant());
     }

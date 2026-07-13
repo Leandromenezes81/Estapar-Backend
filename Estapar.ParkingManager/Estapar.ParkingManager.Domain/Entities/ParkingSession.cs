@@ -35,7 +35,7 @@ public sealed class ParkingSession
     public static ParkingSession Open(LicensePlate licensePlate, int sectorId, DateTime entryTime, decimal lockedPriceFactor)
     {
         if (sectorId <= 0)
-            throw new ArgumentOutOfRangeException(nameof(sectorId), "Sector id must be greater than zero.");
+            throw new ArgumentOutOfRangeException(nameof(sectorId), "O Id do setor deve ser maior que zero.");
 
         return new ParkingSession(Guid.NewGuid(), licensePlate, sectorId, entryTime, lockedPriceFactor);
     }
@@ -43,7 +43,7 @@ public sealed class ParkingSession
     public void AssignSpot(int spotId)
     {
         if (!IsOpen)
-            throw new InvalidOperationException($"Cannot assign a spot to session {Id}: it is already closed.");
+            throw new InvalidOperationException($"Não é possível atribuir uma vaga à sessão {Id}: ela já está encerrada.");
 
         SpotId = spotId;
     }
@@ -51,7 +51,7 @@ public sealed class ParkingSession
     public void Close(DateTime exitTime, decimal sectorBasePrice)
     {
         if (!IsOpen)
-            throw new InvalidOperationException($"Session {Id} is already closed.");
+            throw new InvalidOperationException($"A sessão {Id} já está encerrada.");
 
         AmountCharged = FeeCalculator.Calculate(EntryTime, exitTime, sectorBasePrice, LockedPriceFactor);
         ExitTime = exitTime;

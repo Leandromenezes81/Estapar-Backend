@@ -12,7 +12,7 @@ public sealed class LicensePlate : IEquatable<LicensePlate>
     public static LicensePlate Create(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("License plate cannot be empty.", nameof(value));
+            throw new ArgumentException("A placa não pode ser vazia.", nameof(value));
 
         return new LicensePlate(value.Trim().ToUpperInvariant());
     }

@@ -27,7 +27,7 @@ public sealed class HandleParkedUseCase
             ?? throw new SessionNotFoundException(command.LicensePlate);
 
         var spot = await _spots.GetByCoordinatesAsync(command.SectorId, command.Lat, command.Lng, cancellationToken)
-            ?? throw new InvalidOperationException($"No spot found in sector '{command.SectorId}' at coordinates ({command.Lat}, {command.Lng}).");
+            ?? throw new InvalidOperationException($"Nenhuma vaga encontrada no setor '{command.SectorId}' nas coordenadas ({command.Lat}, {command.Lng}).");
 
         spot.Occupy();
         session.AssignSpot(spot.Id);

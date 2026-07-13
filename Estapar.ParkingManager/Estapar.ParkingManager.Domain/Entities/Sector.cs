@@ -26,13 +26,13 @@ public sealed class Sector
     public static Sector Create(int id, string name, decimal basePrice, int maxCapacity)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Sector name cannot be empty.", nameof(name));
+            throw new ArgumentException("O nome do setor não pode ser vazio.", nameof(name));
 
         if (basePrice < 0)
-            throw new ArgumentOutOfRangeException(nameof(basePrice), "Base price cannot be negative.");
+            throw new ArgumentOutOfRangeException(nameof(basePrice), "O preço base não pode ser negativo.");
 
         if (maxCapacity <= 0)
-            throw new ArgumentOutOfRangeException(nameof(maxCapacity), "Max capacity must be greater than zero.");
+            throw new ArgumentOutOfRangeException(nameof(maxCapacity), "A capacidade máxima deve ser maior que zero.");
 
         return new Sector(id, name, basePrice, maxCapacity);
     }

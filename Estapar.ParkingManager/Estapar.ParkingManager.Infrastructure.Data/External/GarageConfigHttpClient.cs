@@ -18,6 +18,6 @@ public sealed class GarageConfigHttpClient : IGarageConfigClient
     {
         var config = await _httpClient.GetFromJsonAsync<List<GarageConfigDto>>("/garage", cancellationToken);
 
-        return config ?? throw new InvalidOperationException("The Garage API returned an empty garage configuration.");
+        return config ?? throw new InvalidOperationException("A API da garagem retornou uma configuração vazia.");
     }
 }

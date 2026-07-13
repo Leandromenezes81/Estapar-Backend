@@ -1,3 +1,5 @@
+using System.Net;
+using Estapar.ParkingManager.Application.DTO;
 using Estapar.ParkingManager.Domain.Exceptions;
 
 namespace Estapar.ParkingManager.Api.Middleware;
@@ -23,11 +25,15 @@ public sealed class ExceptionHandlingMiddleware
         catch (Exception ex)
         {
             var (statusCode, message) = MapException(ex);
-            _logger.LogWarning(ex, "Request {Method} {Path} failed: {Message}", context.Request.Method, context.Request.Path, ex.Message);
+            _logger.LogWarning(ex, "A requisição {Method} {Path} falhou: {Message}", context.Request.Method, context.Request.Path, ex.Message);
+
+            var response = context.RequestServices.GetRequiredService<Response>();
+            response.AddErrorMessages(message);
+            await response.GenerateResponse((HttpStatusCode)statusCode);
 
             context.Response.StatusCode = statusCode;
             context.Response.ContentType = "application/json";
-            await context.Response.WriteAsJsonAsync(new { error = message });
+            await context.Response.WriteAsJsonAsync(response);
         }
     }
 
@@ -37,6 +43,6 @@ public sealed class ExceptionHandlingMiddleware
         SessionNotFoundException e => (StatusCodes.Status404NotFound, e.Message),
         ArgumentException e => (StatusCodes.Status400BadRequest, e.Message),
         InvalidOperationException e => (StatusCodes.Status400BadRequest, e.Message),
-        _ => (StatusCodes.Status500InternalServerError, "An unexpected error occurred.")
+        _ => (StatusCodes.Status500InternalServerError, "Ocorreu um erro inesperado.")
     };
 }

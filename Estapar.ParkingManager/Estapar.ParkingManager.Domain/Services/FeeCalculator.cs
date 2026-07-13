@@ -14,7 +14,7 @@ public static class FeeCalculator
     public static Money Calculate(DateTime entryTime, DateTime exitTime, decimal basePrice, decimal priceFactor)
     {
         if (exitTime < entryTime)
-            throw new ArgumentOutOfRangeException(nameof(exitTime), "Exit time cannot be before entry time.");
+            throw new ArgumentOutOfRangeException(nameof(exitTime), "O horário de saída não pode ser anterior ao horário de entrada.");
 
         var duration = exitTime - entryTime;
         if (duration <= FreeThreshold)

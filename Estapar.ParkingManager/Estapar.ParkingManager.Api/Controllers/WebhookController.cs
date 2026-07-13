@@ -1,3 +1,4 @@
+using System.Net;
 using Estapar.ParkingManager.Application.DTO;
 using Estapar.ParkingManager.Application.UseCases.Webhook;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +10,12 @@ namespace Estapar.ParkingManager.Api.Controllers;
 public sealed class WebhookController : ControllerBase
 {
     private readonly HandleWebhookEventUseCase _useCase;
+    private readonly Response _response;
 
-    public WebhookController(HandleWebhookEventUseCase useCase)
+    public WebhookController(HandleWebhookEventUseCase useCase, Response response)
     {
         _useCase = useCase;
+        _response = response;
     }
 
     /// <summary>Receives ENTRY, PARKED and EXIT events from the simulator.</summary>
@@ -20,6 +23,8 @@ public sealed class WebhookController : ControllerBase
     public async Task<IActionResult> Handle([FromBody] WebhookEventDto dto, CancellationToken cancellationToken)
     {
         await _useCase.HandleAsync(dto, cancellationToken);
-        return Ok();
+
+        var response = await _response.GenerateResponse(HttpStatusCode.OK, $"Evento '{dto.EventType}' processado com sucesso.");
+        return Ok(response);
     }
 }

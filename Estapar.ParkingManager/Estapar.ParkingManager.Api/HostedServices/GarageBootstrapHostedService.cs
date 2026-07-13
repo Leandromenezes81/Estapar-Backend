@@ -19,9 +19,9 @@ public sealed class GarageBootstrapHostedService : IHostedService
         using var scope = _serviceProvider.CreateScope();
         var useCase = scope.ServiceProvider.GetRequiredService<LoadGarageConfigurationUseCase>();
 
-        _logger.LogInformation("Fetching garage configuration from the simulator...");
+        _logger.LogInformation("Buscando configuração da garagem no simulador...");
         await useCase.HandleAsync(cancellationToken);
-        _logger.LogInformation("Garage configuration loaded.");
+        _logger.LogInformation("Configuração da garagem carregada.");
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;

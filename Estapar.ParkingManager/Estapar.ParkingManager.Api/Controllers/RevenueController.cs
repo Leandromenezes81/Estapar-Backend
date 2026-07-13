@@ -1,6 +1,7 @@
 using Estapar.ParkingManager.Application.DTO;
 using Estapar.ParkingManager.Application.UseCases.Revenue;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using System.Text.Json;
 
 namespace Estapar.ParkingManager.Api.Controllers;
@@ -10,10 +11,12 @@ namespace Estapar.ParkingManager.Api.Controllers;
 public sealed class RevenueController : ControllerBase
 {
     private readonly GetRevenueUseCase _useCase;
+    private readonly Response _response;
 
-    public RevenueController(GetRevenueUseCase useCase)
+    public RevenueController(GetRevenueUseCase useCase, Response response)
     {
         _useCase = useCase;
+        _response = response;
     }
 
     /// <summary>
@@ -38,11 +41,17 @@ public sealed class RevenueController : ControllerBase
         }
 
         if (sector is null || date is null)
-            return BadRequest("Both 'sector' and 'date' are required, either as a JSON body or as query parameters.");
+        {
+            _response.AddErrorMessages("Os campos 'sector' e 'date' são obrigatórios, seja no corpo JSON ou como parâmetros de query.");
+            var badRequest = await _response.GenerateResponse(HttpStatusCode.BadRequest);
+            return BadRequest(badRequest);
+        }
 
         var query = new RevenueQuery(sector.Value, date.Value);
         var money = await _useCase.HandleAsync(query, cancellationToken);
+        var revenue = new RevenueResponse(money.Amount, money.Currency, DateTime.UtcNow);
 
-        return Ok(new RevenueResponse(money.Amount, money.Currency, DateTime.UtcNow));
+        var response = await _response.GenerateResponse(HttpStatusCode.OK, "Receita calculada com sucesso.", revenue, count: 1);
+        return Ok(response);
     }
 }

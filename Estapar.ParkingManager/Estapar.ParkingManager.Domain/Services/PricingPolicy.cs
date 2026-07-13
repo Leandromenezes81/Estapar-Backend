@@ -19,7 +19,7 @@ public static class PricingPolicy
     public static decimal CalculateFactor(decimal occupancyRatio)
     {
         if (occupancyRatio < 0)
-            throw new ArgumentOutOfRangeException(nameof(occupancyRatio), "Occupancy ratio cannot be negative.");
+            throw new ArgumentOutOfRangeException(nameof(occupancyRatio), "A taxa de ocupação não pode ser negativa.");
 
         return occupancyRatio switch
         {

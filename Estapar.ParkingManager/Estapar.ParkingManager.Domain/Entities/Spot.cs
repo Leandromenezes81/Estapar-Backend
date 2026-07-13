@@ -23,7 +23,7 @@ public sealed class Spot
     public static Spot Create(int id, int sectorId, double lat, double lng)
     {
         if (sectorId <= 0)
-            throw new ArgumentOutOfRangeException(nameof(sectorId), "Sector id must be greater than zero.");
+            throw new ArgumentOutOfRangeException(nameof(sectorId), "O Id do setor deve ser maior que zero.");
 
         return new Spot(id, sectorId, lat, lng);
     }
@@ -33,7 +33,7 @@ public sealed class Spot
     public void Occupy()
     {
         if (Status == SpotStatus.OCCUPIED)
-            throw new InvalidOperationException($"Spot {Id} is already occupied.");
+            throw new InvalidOperationException($"A vaga {Id} já está ocupada.");
 
         Status = SpotStatus.OCCUPIED;
     }

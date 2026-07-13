@@ -32,7 +32,7 @@ public sealed class HandleExitUseCase
             ?? throw new SessionNotFoundException(command.LicensePlate);
 
         var sector = await _sectors.GetByIdAsync(session.SectorId, cancellationToken)
-            ?? throw new InvalidOperationException($"Sector id '{session.SectorId}' not found.");
+            ?? throw new InvalidOperationException($"Setor de Id '{session.SectorId}' não encontrado.");
 
         session.Close(command.ExitTime, sector.BasePrice);
 

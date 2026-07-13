@@ -26,7 +26,7 @@ public sealed class HandleEntryUseCase
     public async Task HandleAsync(EntryCommand command, CancellationToken cancellationToken = default)
     {
         var sector = await _sectors.GetByIdAsync(command.SectorId, cancellationToken)
-            ?? throw new InvalidOperationException($"Unknown sector id '{command.SectorId}'.");
+            ?? throw new InvalidOperationException($"Setor de Id '{command.SectorId}' desconhecido.");
 
         var activeCount = await _sessions.CountActiveBySectorAsync(sector.Id, cancellationToken);
 
