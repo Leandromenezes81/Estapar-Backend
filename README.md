@@ -1,8 +1,7 @@
 # Estapar Backend
 
 Backend de gerenciamento de estacionamento (vagas, entrada/saída de veículos e receita), implementado
-como teste técnico da Estapar. Detalhes de regras de negócio e decisões de arquitetura em
-[`docs/PLANO.md`](docs/PLANO.md).
+como teste técnico da Estapar.
 
 ## Aplicações
 
