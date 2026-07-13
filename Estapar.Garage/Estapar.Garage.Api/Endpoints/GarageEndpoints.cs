@@ -1,5 +1,6 @@
 using Estapar.Garage.Api.Application.DTO;
 using Estapar.Garage.Api.Application.Services;
+using Estapar.Garage.Api.Filters;
 
 namespace Estapar.Garage.Api.Endpoints;
 
@@ -11,10 +12,13 @@ public static class GarageEndpoints
                 Results.Ok(await service.GetGarageConfigurationAsync(cancellationToken)))
             .WithName("GetGarageConfiguration")
             .WithTags("Garage")
-            .WithSummary("Todas as garagens (mesmo formato agregado de GET /garages/{id}) — contrato consumido pelo Estapar.ParkingManager.")
-            .Produces<List<GarageResponse>>(StatusCodes.Status200OK);
+            .WithSummary("Todas as garagens (mesmo formato agregado de GET /garages/{id}) — contrato consumido pelo Estapar.ParkingManager. Protegido por API Key (header X-Api-Key), não por JWT.")
+            .AddEndpointFilter<ApiKeyEndpointFilter>()
+            .AllowAnonymous()
+            .Produces<List<GarageResponse>>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status401Unauthorized);
 
-        var group = app.MapGroup("/garages").WithTags("Garages");
+        var group = app.MapGroup("/garages").WithTags("Garages").RequireAuthorization();
 
         group.MapGet("/{id:int}", async (int id, GarageService service, CancellationToken cancellationToken) =>
             {

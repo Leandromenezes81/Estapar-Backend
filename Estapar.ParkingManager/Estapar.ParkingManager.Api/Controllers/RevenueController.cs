@@ -1,5 +1,6 @@
 using Estapar.ParkingManager.Application.DTO;
 using Estapar.ParkingManager.Application.UseCases.Revenue;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text.Json;
@@ -8,6 +9,7 @@ namespace Estapar.ParkingManager.Api.Controllers;
 
 [ApiController]
 [Route("revenue")]
+[Authorize]
 public sealed class RevenueController : ControllerBase
 {
     private readonly GetRevenueUseCase _useCase;

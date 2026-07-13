@@ -29,12 +29,18 @@ public static class InfrastructureDataRegistration
         services.AddScoped<IParkingSessionRepository, ParkingSessionRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-        // Estapar.Garage.Api HTTP client — source of the GET /garage configuration
+        // Estapar.Garage.Api HTTP client — source of the GET /garage configuration.
+        // GET /garage é protegido por API Key (não JWT) do lado do Garage.Api — o header
+        // é fixo por cliente HTTP, sem round-trip de token.
         services.AddHttpClient<IGarageConfigClient, GarageConfigHttpClient>(client =>
         {
             var baseUrl = configuration["GarageApi:BaseUrl"]
                 ?? throw new InvalidOperationException("A configuração 'GarageApi:BaseUrl' não foi definida.");
             client.BaseAddress = new Uri(baseUrl);
+
+            var apiKey = configuration["GarageApi:ApiKey"]
+                ?? throw new InvalidOperationException("A configuração 'GarageApi:ApiKey' não foi definida.");
+            client.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
         });
 
         return services;

@@ -78,6 +78,44 @@ Banco próprio (`EstaparGarageDb`), independente do `EstaparParkingManagerDb` us
 `GarageApi:BaseUrl` deve apontar para onde o `Estapar.Garage.Api` está rodando (ou via variável de
 ambiente `GarageApi__BaseUrl`).
 
+## Autenticação
+
+Cada API tem seu **próprio** esquema de autenticação — não compartilham segredo entre si:
+
+- **JWT** (`Authorization: Bearer <token>`) protege o CRUD `/garages` (Garage.Api) e o `/revenue`
+  (ParkingManager.Api). O token é obtido em `POST /auth/token` de cada API, com `client_id`/
+  `client_secret` fixos por configuração (sem base de usuários — autenticação básica, não OAuth
+  completo).
+- **API Key** (header `X-Api-Key`) protege só o `GET /garage` do Garage.Api — é o endpoint chamado
+  pelo `Estapar.ParkingManager.Api` (bootstrap + job periódico do Quartz), então usa uma chave fixa
+  compartilhada entre as duas APIs em vez de um fluxo de token completo.
+- `POST /webhook` (ParkingManager.Api) continua **anônimo** — é chamado por um simulador externo,
+  fora do nosso controle.
+
+Configuração necessária (todos os valores sensíveis via user secrets, nunca no `appsettings.json`):
+
+```
+# Estapar.Garage.Api
+dotnet user-secrets set "Jwt:Key" "<segredo-hmac>" --project Estapar.Garage/Estapar.Garage.Api
+dotnet user-secrets set "Auth:ClientSecret" "<segredo>" --project Estapar.Garage/Estapar.Garage.Api
+dotnet user-secrets set "ApiKey" "<chave-compartilhada>" --project Estapar.Garage/Estapar.Garage.Api
+
+# Estapar.ParkingManager.Api
+dotnet user-secrets set "Jwt:Key" "<segredo-hmac>" --project Estapar.ParkingManager/Estapar.ParkingManager.Api
+dotnet user-secrets set "Auth:ClientSecret" "<segredo>" --project Estapar.ParkingManager/Estapar.ParkingManager.Api
+dotnet user-secrets set "GarageApi:ApiKey" "<mesma-chave-compartilhada-do-Garage.Api>" --project Estapar.ParkingManager/Estapar.ParkingManager.Api
+```
+
+`Auth:ClientId` (`"garage-admin"` no Garage.Api, `"parking-manager-admin"` no ParkingManager.Api)
+já vem no `appsettings.json` — só o `ClientSecret` é sensível. Exemplo de uso:
+
+```
+POST /auth/token
+{ "clientId": "garage-admin", "clientSecret": "<seu-segredo>" }
+
+→ { "accessToken": "...", "expiresIn": 3600, "tokenType": "Bearer" }
+```
+
 ## Como rodar
 
 1. **Restaurar dependências**
@@ -127,20 +165,22 @@ ambiente `GarageApi__BaseUrl`).
 
 ### Estapar.Garage.Api (`http://localhost:5010`)
 
-| Método | Rota | Descrição |
-|---|---|---|
-| `GET` | `/garage` | Todas as garagens, no mesmo formato agregado (com setores e vagas) de `GET /garages/{id}` — contrato consumido pelo ParkingManager. |
-| `GET` | `/garages/{id}` | Busca uma garagem (com setores e vagas) por Id. |
-| `POST` | `/garages` | Cria uma garagem com seus setores e vagas. |
-| `PUT` | `/garages/{id}` | Atualiza nome/setores/vagas de uma garagem (substitui o conjunto de setores/vagas). |
-| `DELETE` | `/garages/{id}` | Remove (soft delete) uma garagem e seus setores/vagas. |
+| Método | Rota | Auth | Descrição |
+|---|---|---|---|
+| `POST` | `/auth/token` | — | Emite um JWT a partir de `client_id`/`client_secret`. |
+| `GET` | `/garage` | `X-Api-Key` | Todas as garagens, no mesmo formato agregado (com setores e vagas) de `GET /garages/{id}` — contrato consumido pelo ParkingManager. |
+| `GET` | `/garages/{id}` | JWT | Busca uma garagem (com setores e vagas) por Id. |
+| `POST` | `/garages` | JWT | Cria uma garagem com seus setores e vagas. |
+| `PUT` | `/garages/{id}` | JWT | Atualiza nome/setores/vagas de uma garagem (substitui o conjunto de setores/vagas). |
+| `DELETE` | `/garages/{id}` | JWT | Remove (soft delete) uma garagem e seus setores/vagas. |
 
 ### Estapar.ParkingManager.Api (`http://localhost:5003`)
 
-| Método | Rota | Descrição |
-|---|---|---|
-| `POST` | `/webhook` | Recebe eventos `ENTRY`, `PARKED`, `EXIT` do simulador. |
-| `GET` | `/revenue` | Receita total por setor (Id) e data. |
+| Método | Rota | Auth | Descrição |
+|---|---|---|---|
+| `POST` | `/auth/token` | — | Emite um JWT a partir de `client_id`/`client_secret`. |
+| `POST` | `/webhook` | — | Recebe eventos `ENTRY`, `PARKED`, `EXIT` do simulador (anônimo — fora do nosso controle). |
+| `GET` | `/revenue` | JWT | Receita total por setor (Id) e data. |
 
 Todas as respostas (sucesso e erro) dos dois endpoints acima são envelopadas em um objeto `Response`:
 
@@ -218,21 +258,25 @@ dotnet test Estapar.Garage/Estapar.Garage.Tests
 - `GET /revenue` com corpo em uma requisição GET é atípico; a API aceita tanto o body quanto query string para maior compatibilidade com clientes/ferramentas que não enviam corpo em GET.
 - `PUT /garages/{id}` substitui integralmente o conjunto de setores/vagas da garagem (soft-delete dos antigos + criação dos novos), em vez de reconciliar item a item por Id — mais simples e seguro para um CRUD escopado no agregado Garage.
 - Todas as mensagens de sucesso e erro retornadas pela API (e as exceções internas que as originam) estão em português. Mensagens geradas diretamente pelo parser JSON do .NET (`System.Text.Json`) em caso de payload semanticamente inválido — ex. um valor incompatível com o tipo de um campo — permanecem em inglês, por serem produzidas pelo runtime antes de qualquer código da aplicação.
+- Autenticação é "básica" por design: `client_id`/`client_secret` fixos por configuração (sem base de usuários, sem refresh token) e uma API Key estática só para a chamada serviço-a-serviço `GET /garage`. Cada API assina/valida seus próprios JWTs com uma chave independente — não há segredo simétrico compartilhado entre as duas.
 
 ## Estrutura do projeto
 
 ```
 Estapar.ParkingManager/
-  Estapar.ParkingManager.Domain/              # Entidades, VOs, regras de negócio puras
-  Estapar.ParkingManager.Application/         # Casos de uso, DTOs, interfaces (ports)
-  Estapar.ParkingManager.Infrastructure.Data/ # EF Core, repositórios, cliente HTTP do Estapar.Garage.Api
-  Estapar.ParkingManager.Api/                 # Controllers, DI, Swagger, hosted service de bootstrap
-  Estapar.ParkingManager.Tests/               # Testes unitários (xUnit), organizados por camada: Domain/, Application/
+  Estapar.ParkingManager.Domain/                    # Entidades, VOs, regras de negócio puras
+  Estapar.ParkingManager.Application/               # Casos de uso, DTOs, interfaces (ports)
+  Estapar.ParkingManager.Infrastructure.Data/        # EF Core, repositórios, cliente HTTP do Estapar.Garage.Api
+  Estapar.ParkingManager.Infrastructure.BackgroundServices/ # Jobs Quartz.NET (bootstrap/re-sync da garagem)
+  Estapar.ParkingManager.Api/                       # Controllers, Auth/ (JWT), Registration/*Registration (DI), Swagger
+  Estapar.ParkingManager.Tests/                     # Testes unitários (xUnit), organizados por camada: Domain/, Application/
 Estapar.Garage/
   Estapar.Garage.Api/                         # Minimal API — Domain/Application/Infrastructure/Endpoints em pastas
     Domain/Entities/                          # Garage, Sector, Spot
     Application/                              # DTOs, interfaces, GarageService (casos de uso)
     Infrastructure/Persistence/               # GarageDbContext, configurations, migrations, repositório
-    Endpoints/                                # GarageEndpoints (Minimal API routes)
+    Auth/                                     # JwtTokenService (emissão de token)
+    Filters/                                  # ApiKeyEndpointFilter (protege GET /garage)
+    Endpoints/                                # GarageEndpoints, AuthEndpoints (Minimal API routes)
   Estapar.Garage.Tests/                       # Testes unitários (xUnit), organizados por camada: Domain/, Application/
 ```

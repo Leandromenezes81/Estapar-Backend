@@ -17,6 +17,7 @@ CultureInfo.DefaultThreadCurrentUICulture = ptBr;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApi();
+builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddInfrastructureData(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddBackgroundServices(builder.Configuration);
@@ -33,6 +34,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
