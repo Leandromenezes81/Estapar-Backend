@@ -29,6 +29,24 @@ A solution reúne duas Web APIs .NET independentes, lado a lado:
 
 ## Configuração
 
+A credencial da connection string **não fica no `appsettings.json`** (o valor commitado ali é só um
+placeholder, `Password=CHANGE_ME`) — cada projeto lê a connection string real via
+[.NET User Secrets](https://learn.microsoft.com/aspnet/core/security/app-secrets), configurado assim:
+
+```
+dotnet user-secrets init --project Estapar.Garage/Estapar.Garage.Api
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=127.0.0.1,1433;Database=EstaparGarageDb;Uid=sa;Password=<sua-senha>;MultipleActiveResultSets=true;TrustServerCertificate=True" --project Estapar.Garage/Estapar.Garage.Api
+
+dotnet user-secrets init --project Estapar.ParkingManager/Estapar.ParkingManager.Api
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=127.0.0.1,1433;Database=EstaparParkingManagerDb;Uid=sa;Password=<sua-senha>;MultipleActiveResultSets=true;TrustServerCertificate=True" --project Estapar.ParkingManager/Estapar.ParkingManager.Api
+```
+
+Os secrets ficam fora do repositório (`%APPDATA%\Microsoft\UserSecrets\<id>\secrets.json` no Windows),
+e o `dotnet user-secrets init` já grava o `<UserSecretsId>` correspondente no `.csproj` de cada API —
+o `WebApplication.CreateBuilder` os carrega automaticamente em ambiente `Development`, sobrepondo o
+placeholder do `appsettings.json`. Em outros ambientes, defina a connection string via variável de
+ambiente (`ConnectionStrings__DefaultConnection`) ou outro provedor de configuração.
+
 ### Estapar.Garage.Api
 
 `Estapar.Garage/Estapar.Garage.Api/appsettings.json`:
@@ -60,9 +78,6 @@ Banco próprio (`EstaparGarageDb`), independente do `EstaparParkingManagerDb` us
 
 `GarageApi:BaseUrl` deve apontar para onde o `Estapar.Garage.Api` está rodando (ou via variável de
 ambiente `GarageApi__BaseUrl`).
-
-> As connection strings dos arquivos `appsettings.json` deste repositório são de ambiente local/teste.
-> Não reutilize essas credenciais em ambientes reais.
 
 ## Como rodar
 
