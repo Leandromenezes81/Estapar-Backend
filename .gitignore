@@ -11,6 +11,9 @@ Tasks.md
 TASKS.md
 docs/PLANO.md
 
+# docs/Tasks.md é o histórico de tasks do projeto e é versionado
+!docs/Tasks.md
+
 # User-specific files
 *.rsuser
 *.suo
