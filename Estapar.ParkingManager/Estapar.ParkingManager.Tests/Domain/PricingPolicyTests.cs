@@ -2,7 +2,7 @@ using Estapar.ParkingManager.Domain.Services;
 using FluentAssertions;
 using Xunit;
 
-namespace Estapar.ParkingManager.Domain.Tests;
+namespace Estapar.ParkingManager.Tests.Domain;
 
 public class PricingPolicyTests
 {

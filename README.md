@@ -201,10 +201,15 @@ O `collection` da resposta traz `{ "amount": ..., "currency": "BRL", "timestamp"
 ## Testes
 
 ```
-dotnet test Estapar.ParkingManager/Estapar.ParkingManager.Domain.Tests
+dotnet test Estapar.ParkingManager/Estapar.ParkingManager.Tests
+dotnet test Estapar.Garage/Estapar.Garage.Tests
 ```
 
-Cobre `PricingPolicy` (limiares de ocupação 25/50/75/100%) e `FeeCalculator` (30 min grátis, arredondamento de hora, aplicação do fator de preço).
+`Estapar.ParkingManager.Tests` organiza os testes por camada:
+- `Domain/`: `PricingPolicy` (limiares de ocupação 25/50/75/100%) e `FeeCalculator` (30 min grátis, arredondamento de hora, aplicação do fator de preço).
+- `Application/`: casos de uso do webhook (`HandleEntryUseCase`, `HandleExitUseCase`, `HandleParkedUseCase`, `HandleWebhookEventUseCase`) e o bootstrap da garagem (`LoadGarageConfigurationUseCase`), com fakes escritos à mão para os repositórios (sem biblioteca de mock).
+
+`Estapar.Garage.Tests` segue a mesma convenção (`Domain/`, `Application/`), cobrindo as entidades `Garage`/`Sector`/`Spot` e o `GarageService`.
 
 ## Suposições assumidas fora da spec
 
@@ -222,11 +227,12 @@ Estapar.ParkingManager/
   Estapar.ParkingManager.Application/         # Casos de uso, DTOs, interfaces (ports)
   Estapar.ParkingManager.Infrastructure.Data/ # EF Core, repositórios, cliente HTTP do Estapar.Garage.Api
   Estapar.ParkingManager.Api/                 # Controllers, DI, Swagger, hosted service de bootstrap
-  Estapar.ParkingManager.Domain.Tests/        # Testes unitários de domínio (xUnit)
+  Estapar.ParkingManager.Tests/               # Testes unitários (xUnit), organizados por camada: Domain/, Application/
 Estapar.Garage/
   Estapar.Garage.Api/                         # Minimal API — Domain/Application/Infrastructure/Endpoints em pastas
     Domain/Entities/                          # Garage, Sector, Spot
     Application/                              # DTOs, interfaces, GarageService (casos de uso)
     Infrastructure/Persistence/               # GarageDbContext, configurations, migrations, repositório
     Endpoints/                                # GarageEndpoints (Minimal API routes)
+  Estapar.Garage.Tests/                       # Testes unitários (xUnit), organizados por camada: Domain/, Application/
 ```

@@ -15,9 +15,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estapar.ParkingManager.Infr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estapar.ParkingManager.Api", "Estapar.ParkingManager\Estapar.ParkingManager.Api\Estapar.ParkingManager.Api.csproj", "{E71EE9CB-1F58-4311-B2D3-15577A7F8D46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estapar.ParkingManager.Domain.Tests", "Estapar.ParkingManager\Estapar.ParkingManager.Domain.Tests\Estapar.ParkingManager.Domain.Tests.csproj", "{1C3C2077-54BB-4EB6-ABE4-67D5044E7900}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estapar.ParkingManager.Tests", "Estapar.ParkingManager\Estapar.ParkingManager.Tests\Estapar.ParkingManager.Tests.csproj", "{1C3C2077-54BB-4EB6-ABE4-67D5044E7900}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estapar.Garage.Api", "Estapar.Garage\Estapar.Garage.Api\Estapar.Garage.Api.csproj", "{2B4C6D8E-1A3F-4952-8B7C-3D5E7F9A0B1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estapar.Garage.Tests", "Estapar.Garage\Estapar.Garage.Tests\Estapar.Garage.Tests.csproj", "{3D5E7F9A-1B2C-4D6E-8F0A-1B2C3D4E5F6A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,6 +54,10 @@ Global
 		{2B4C6D8E-1A3F-4952-8B7C-3D5E7F9A0B1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B4C6D8E-1A3F-4952-8B7C-3D5E7F9A0B1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B4C6D8E-1A3F-4952-8B7C-3D5E7F9A0B1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D5E7F9A-1B2C-4D6E-8F0A-1B2C3D4E5F6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D5E7F9A-1B2C-4D6E-8F0A-1B2C3D4E5F6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D5E7F9A-1B2C-4D6E-8F0A-1B2C3D4E5F6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D5E7F9A-1B2C-4D6E-8F0A-1B2C3D4E5F6A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5615B13B-1772-4C69-93F9-D86C2B92F5CE} = {9A1B2C3D-4E5F-4061-8A2B-1D3E4F5A6B7C}
@@ -60,5 +66,6 @@ Global
 		{E71EE9CB-1F58-4311-B2D3-15577A7F8D46} = {9A1B2C3D-4E5F-4061-8A2B-1D3E4F5A6B7C}
 		{1C3C2077-54BB-4EB6-ABE4-67D5044E7900} = {9A1B2C3D-4E5F-4061-8A2B-1D3E4F5A6B7C}
 		{2B4C6D8E-1A3F-4952-8B7C-3D5E7F9A0B1C} = {7C6B5A4D-3E2F-4A1B-9C8D-2E1F0A9B8C7D}
+		{3D5E7F9A-1B2C-4D6E-8F0A-1B2C3D4E5F6A} = {7C6B5A4D-3E2F-4A1B-9C8D-2E1F0A9B8C7D}
 	EndGlobalSection
 EndGlobal

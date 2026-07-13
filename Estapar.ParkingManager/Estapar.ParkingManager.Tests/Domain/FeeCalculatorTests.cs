@@ -1,7 +1,7 @@
 using Estapar.ParkingManager.Domain.Services;
 using FluentAssertions;
 
-namespace Estapar.ParkingManager.Domain.Tests;
+namespace Estapar.ParkingManager.Tests.Domain;
 
 public class FeeCalculatorTests
 {

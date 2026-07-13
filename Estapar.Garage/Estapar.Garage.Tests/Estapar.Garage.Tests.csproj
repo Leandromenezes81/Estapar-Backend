@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Estapar.ParkingManager.Domain\Estapar.ParkingManager.Domain.csproj" />
+    <ProjectReference Include="..\Estapar.Garage.Api\Estapar.Garage.Api.csproj" />
   </ItemGroup>
 
 </Project>
